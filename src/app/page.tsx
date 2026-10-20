@@ -7,7 +7,7 @@ export default async function Home() {
   const { user, profile, managed } = await getViewer();
 
   if (user) {
-    if (managed.length) redirect("/manage/teachers");
+    if (managed.length) redirect("/manage/covers");
     if (!profile) redirect("/onboarding");
     redirect("/teach");
   }

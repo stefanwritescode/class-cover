@@ -89,7 +89,7 @@ export default async function TeachersPage() {
       title="Your teachers"
       subtitle={toVet ? `${toVet} waiting for you to vet` : "Everyone's been vetted"}
       headerExtra={pipeline}
-      nav={managerNav("teachers", toVet)}
+      nav={managerNav("teachers", { toVet })}
     >
       {error && <ErrorNote message={error.message} />}
       {!error && teachers.length === 0 && (

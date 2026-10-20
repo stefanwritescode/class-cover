@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireManager } from "@/lib/session";
 import { AppShell, buttonClass, Card, inputClass } from "@/components/ui";
 import { managerNav } from "../nav";
@@ -46,6 +47,16 @@ export default async function SettingsPage() {
         </Card>
         <button className={buttonClass()}>Save settings</button>
       </form>
+      <div className="grid grid-cols-2 gap-3">
+        <Link href="/manage/timetable" className="grid gap-1 rounded-3xl border border-line bg-surface p-4">
+          <span className="font-semibold">Timetable</span>
+          <span className="text-xs text-muted">Classes imported from Octiv</span>
+        </Link>
+        <Link href="/manage/settings/posters" className="grid gap-1 rounded-3xl border border-line bg-surface p-4">
+          <span className="font-semibold">Check-in posters</span>
+          <span className="text-xs text-muted">QR codes for each reception</span>
+        </Link>
+      </div>
     </AppShell>
   );
 }

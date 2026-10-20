@@ -64,6 +64,11 @@ export const Icon = {
   home: <svg viewBox="0 0 24 24" className="h-5 w-5" {...P}><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z" /></svg>,
   check: <svg viewBox="0 0 24 24" className="h-4 w-4" {...P}><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>,
   phone: <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" {...P}><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>,
+  plus: <svg viewBox="0 0 24 24" className="h-5 w-5" {...P}><circle cx="12" cy="12" r="9" /><path d="M12 8v8M8 12h8" /></svg>,
+  rand: <svg viewBox="0 0 24 24" className="h-5 w-5" {...P}><rect x="3" y="6" width="18" height="12" rx="3" /><circle cx="12" cy="12" r="2.5" /></svg>,
+  user: <svg viewBox="0 0 24 24" className="h-5 w-5" {...P}><circle cx="12" cy="8" r="4" /><path d="M4 21c1-4 4.2-6 8-6s7 2 8 6" /></svg>,
+  clock: <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" {...P}><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></svg>,
+  bolt: <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" {...P}><path d="M13 3L5 13.5h6L10 21l8-10.5h-6z" /></svg>,
   pin: <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" {...P}><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>,
 };
 

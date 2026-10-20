@@ -8,7 +8,10 @@ export async function GET(request: NextRequest) {
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) return NextResponse.redirect(`${origin}/`);
+    // Only follow same-site paths, never another domain.
+    const next = searchParams.get("next") ?? "/";
+    const safe = next.startsWith("/") && !next.startsWith("//") ? next : "/";
+    if (!error) return NextResponse.redirect(`${origin}${safe}`);
   }
   return NextResponse.redirect(`${origin}/login?error=link`);
 }

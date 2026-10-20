@@ -23,6 +23,14 @@ Last-minute cover app for Pilates studios, starting with Stretch Pilates (South 
 - Teachers own their profile. `studio_teachers` holds each studio's relationship (tier, notes).
 - Marketplace visibility is the teacher's choice: `studios_i_work_with` or `verified_studios`. Only managers of approved studios can browse. Contact details (`profile_contacts`) are shared only with studios that work with the teacher; ID and bank (`profile_private`) only with studios where the teacher is approved, plus the platform admin.
 
+- Handover notes: `cover_requests.notes` is visible to every eligible teacher (no client names or health details); `cover_request_access.access_notes` (door codes, parking) only to the teacher holding the class.
+- Teacher availability (`teacher_preferences`) filters alerts only, not what they can see in the app.
+- Expired first aid or insurance (`profiles.*_expiry`) blocks a teacher in `private.eligible_for`.
+- Urgent: classes starting within 3 hours (`URGENT_HOURS`) or flagged by the manager skip the preferred head start. The locum wave also opens on its own once the head start passes (computed in `eligible_for`, no cron).
+- Check-in: each location has a `checkin_code`; the QR poster links to `/checkin/<code>`, which calls `check_in()`.
+- Pay: only manager-confirmed covers count. Monthly invoice at `/manage/pay/invoice`, bank file and Xero CSV at `/manage/pay/export`.
+- Pricing: free for instructors. Studios will be charged later; `cover_assignments.platform_fee` is recorded per cover (0 for now) and shown on the invoice.
+
 ## Conventions
 - Money in whole rands (int). Display as `R275` (en-ZA). Times stored as timestamptz, shown in Africa/Johannesburg.
 - Schema changes go in a new file under `supabase/migrations/`. Never edit an applied migration.

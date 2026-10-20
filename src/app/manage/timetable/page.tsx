@@ -30,7 +30,7 @@ export default async function TimetablePage({ searchParams }: { searchParams: Pr
       eyebrow={studio.name}
       title="Timetable"
       subtitle={current ? `${short(current.name)} · ${all.length} classes a week` : undefined}
-      nav={managerNav("timetable")}
+      nav={managerNav("settings")}
       headerExtra={
         <div className="-mx-5 flex gap-1.5 overflow-x-auto px-5 pb-1">
           {locations?.map((l) => (
