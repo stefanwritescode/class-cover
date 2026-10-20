@@ -14,7 +14,7 @@ Last-minute cover app for Pilates studios, starting with Stretch Pilates (South 
 
 ## Product rules (decided)
 - Only studio managers (or someone acting for the studio) post covers.
-- A request lists accepted trainings; only teachers with a verified matching training are pinged.
+- A request lists accepted trainings; only teachers with a verified matching training are pinged. For now Stretch accepts three: Stretch Pilates, BASI Pilates and Body Intellect teacher training, each valid for every class.
 - Waves: preferred teachers first; after `studios.wave_delay_minutes` (15) unclaimed, vetted locums too. Managers can open early.
 - First qualified teacher to accept wins (`accept_cover` RPC locks the row).
 - Rate: `studios.default_rate` R275, editable per request. No automatic short-notice premium.

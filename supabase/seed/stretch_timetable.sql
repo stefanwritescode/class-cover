@@ -1,11 +1,12 @@
 -- Stretch Pilates timetable, read from Octiv's calendar for the week of 26 Oct 2026.
 -- Group classes only: private, semi-private, assessments and support sessions are left out.
+-- Run after the migrations. Any of the three accepted teacher trainings qualifies for every class.
 do $$
 declare s uuid; l uuid; ref uuid[]; mat uuid[]; str uuid[];
 begin
-  ref := array(select id from trainings where name in ('Stretch Reformer','BASI Comprehensive','STOTT Reformer','Polestar Comprehensive'));
-  mat := array(select id from trainings where name in ('Stretch Mat','BASI Mat','BASI Comprehensive','STOTT Mat','Polestar Mat','Polestar Comprehensive'));
-  str := array(select id from trainings where name in ('Stretch Reformer','Stretch Mat'));
+  ref := array(select id from trainings where name in ('Stretch Pilates Teacher Training','BASI Pilates Teacher Training','Body Intellect Teacher Training'));
+  mat := ref;
+  str := ref;
   insert into studios (name, status) values ('Stretch Pilates', 'approved') returning id into s;
   insert into locations (studio_id, name) values (s, 'Stretch Pilates Ballito') returning id into l;
   insert into timetable_classes (location_id, name, weekday, start_time, duration_minutes, accepted_training_ids) values
