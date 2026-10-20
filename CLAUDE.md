@@ -36,7 +36,7 @@ Last-minute cover app for Pilates studios, starting with Stretch Pilates (South 
 - Env vars: copy `.env.example` to `.env.local`.
 
 ## Build phases
-1. Foundations: logins, teacher signup (trainings, certificates, POPIA consent), studio/locations/timetable, vetting pipeline.
+1. Foundations: logins, teacher signup (trainings ticked, no upload; POPIA consent), studio/locations/timetable, vetting pipeline.
 2. Cover loop: post, waves, push + WhatsApp, accept, re-post on dropout. Gate: pilot with 5-10 teachers for 2 weeks.
 3. Pay and launch: confirm covers, monthly pay report, bank file, Xero export, data download/delete.
 4. Marketplace: profiles and visibility, find instructors, requests, platform approval of studios.

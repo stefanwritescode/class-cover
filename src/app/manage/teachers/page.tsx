@@ -123,7 +123,7 @@ export default async function TeachersPage() {
                     {stage === "declined" && <StageButton teacherId={t.teacher_id} stage="checking_documents" label="Reconsider" />}
                     {(stage === "to_meet" || stage === "checking_documents") && <StageButton teacherId={t.teacher_id} stage="declined" label="Not a fit" variant="danger" />}
                   </div>
-                  {stage === "checking_documents" && !anyVerified && <p className="text-xs text-muted">Verify at least one training to approve.</p>}
+                  {stage === "checking_documents" && !anyVerified && <p className="text-xs text-muted">Check their training (certificate, or with the provider) and mark it verified to approve.</p>}
                 </Card>
               );
             })}

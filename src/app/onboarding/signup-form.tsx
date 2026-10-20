@@ -19,26 +19,20 @@ export default function SignupForm({
   studios: Option[];
 }) {
   const router = useRouter();
-  const [picked, setPicked] = useState<Record<string, File | null>>({});
+  const [picked, setPicked] = useState<string[]>([]);
   const [studioId, setStudioId] = useState(studios[0]?.id ?? "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
   function toggleTraining(id: string) {
-    setPicked((p) => {
-      const next = { ...p };
-      if (id in next) delete next[id];
-      else next[id] = null;
-      return next;
-    });
+    setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
   }
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
     const f = new FormData(e.currentTarget);
-    if (!Object.keys(picked).length) return setError("Choose at least one teacher training.");
-    if (Object.values(picked).some((file) => !file)) return setError("Add a certificate for each training you chose.");
+    if (!picked.length) return setError("Choose at least one teacher training.");
     if (!f.get("consent")) return setError("Please agree to how we use your details.");
 
     setBusy(true);
@@ -63,16 +57,10 @@ export default function SignupForm({
       });
       if (cErr) throw cErr;
 
-      for (const [trainingId, file] of Object.entries(picked)) {
-        const safeName = file!.name.replace(/[^\w.-]+/g, "_");
-        const path = `${userId}/${trainingId}-${Date.now()}-${safeName}`;
-        const { error: uErr } = await supabase.storage.from("certificates").upload(path, file!);
-        if (uErr) throw uErr;
-        const { error: tErr } = await supabase
-          .from("profile_trainings")
-          .insert({ profile_id: userId, training_id: trainingId, certificate_path: path });
-        if (tErr) throw tErr;
-      }
+      const { error: tErr } = await supabase
+        .from("profile_trainings")
+        .insert(picked.map((trainingId) => ({ profile_id: userId, training_id: trainingId })));
+      if (tErr) throw tErr;
 
       if (studioId) {
         const { error: jErr } = await supabase.rpc("request_to_join", { p_studio: studioId });
@@ -109,22 +97,13 @@ export default function SignupForm({
 
       <Card tone="sunk">
         <p className="text-sm font-semibold">Teacher training</p>
-        <p className="-mt-2 text-xs text-muted">Tick each training you completed and upload its certificate (PDF or photo).</p>
+        <p className="-mt-2 text-xs text-muted">Tick each training you completed. The studio checks it with you before approving you.</p>
         {trainings.map((t) => (
           <div key={t.id} className="grid gap-2">
             <label className="flex items-center gap-3 text-sm" htmlFor={`t-${t.id}`}>
-              <input id={`t-${t.id}`} type="checkbox" checked={t.id in picked} onChange={() => toggleTraining(t.id)} className="accent-[var(--accent)]" />
+              <input id={`t-${t.id}`} type="checkbox" checked={picked.includes(t.id)} onChange={() => toggleTraining(t.id)} className="accent-[var(--accent)]" />
               {t.name}
             </label>
-            {t.id in picked && (
-              <input
-                id={`f-${t.id}`}
-                type="file"
-                accept="application/pdf,image/*"
-                className="text-sm text-muted file:mr-3 file:rounded-lg file:border-0 file:bg-accent-soft file:px-3 file:py-1.5 file:font-semibold file:text-accent"
-                onChange={(e) => setPicked((p) => ({ ...p, [t.id]: e.target.files?.[0] ?? null }))}
-              />
-            )}
           </div>
         ))}
       </Card>
@@ -173,7 +152,7 @@ export default function SignupForm({
       <label className="flex items-start gap-3 text-sm" htmlFor="consent">
         <input id="consent" name="consent" type="checkbox" className="mt-1 accent-[var(--accent)]" />
         <span className="text-muted">
-          I agree that Class Cover stores my details and certificates to vet me and offer me cover, and shares them only as described above.
+          I agree that Class Cover stores my details to vet me and offer me cover, and shares them only as described above.
           I can update or delete my details at any time. (Signed in as {email}.)
         </span>
       </label>
