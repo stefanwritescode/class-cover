@@ -36,7 +36,7 @@ export default async function Home() {
       </ol>
       <div className="px-5">
         <Link href="/login" className={`${buttonClass()} w-full`}>
-          Sign in or join as a teacher
+          Sign in or create an account
         </Link>
       </div>
     </main>

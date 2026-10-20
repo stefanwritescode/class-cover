@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getViewer } from "@/lib/session";
 import { AppShell, buttonClass, Card, Field, inputClass, Section } from "@/components/ui";
@@ -36,6 +37,10 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
   return (
     <AppShell eyebrow="Class Cover" title="Profile" subtitle={profile.full_name} nav={teacherNav("profile")}>
       {saved && <Card tone="sunk"><p className="text-sm"><b>Saved.</b></p></Card>}
+      <Link href="/account/password" className="flex items-center justify-between rounded-3xl border border-line bg-surface p-4">
+        <span><span className="block font-semibold">Password</span><span className="block text-xs text-muted">Set one to sign in without waiting for an email</span></span>
+        <span className="text-accent">→</span>
+      </Link>
 
       <Section title="When can you cover?" aside="Leave all off for any">
         <form action={savePreferences} className="grid gap-4">

@@ -56,6 +56,10 @@ export default async function SettingsPage() {
           <span className="font-semibold">Check-in posters</span>
           <span className="text-xs text-muted">QR codes for each reception</span>
         </Link>
+        <Link href="/account/password" className="col-span-2 grid gap-1 rounded-3xl border border-line bg-surface p-4">
+          <span className="font-semibold">Password</span>
+          <span className="text-xs text-muted">Set or change the password for your account</span>
+        </Link>
       </div>
     </AppShell>
   );

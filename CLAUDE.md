@@ -7,7 +7,7 @@ Last-minute cover app for Pilates studios, starting with Stretch Pilates (South 
 
 ## Stack
 - Next.js 15 (App Router, `src/`), Tailwind v4, TypeScript. Mobile-first PWA.
-- Supabase: auth, Postgres with RLS, storage (private `certificates` bucket). Project `class-cover` (ref qkflbtwcrtrnjbzmgvbs), org "Stretch Pilates", region eu-west-2. Timetable seed: `supabase/seed/stretch_timetable.sql` (6 studios, 231 classes, from Octiv).
+- Supabase: auth (email + password, email link as fallback; `/account/password` sets a password while signed in), Postgres with RLS, storage (private `certificates` bucket). Project `class-cover` (ref qkflbtwcrtrnjbzmgvbs), org "Stretch Pilates", region eu-west-2. Timetable seed: `supabase/seed/stretch_timetable.sql` (6 studios, 231 classes, from Octiv).
 - Vercel for hosting.
 - WhatsApp via the studio's existing **ManyChat** WhatsApp Business account (ManyChat API triggers a flow holding a Meta-approved template). Push via Web Push.
 - Payments later via Paystack (Stripe doesn't serve SA businesses). Version 1 only tracks covers and exports a bank payment file and Xero CSV.
