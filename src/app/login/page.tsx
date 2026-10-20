@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { buttonClass, Field, inputClass } from "@/components/ui";
@@ -20,13 +20,35 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState<null | "link" | "confirm">(null);
+  const [code, setCode] = useState("");
+  const [linkError, setLinkError] = useState("");
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("error") === "link")
+      setLinkError("That sign-in link had expired or was already used. Email links work once, and only the newest one works. Some work email systems open links to scan them, which uses them up, so use the 6-digit code from the email instead.");
+  }, []);
+  // After "forgot password", land on the page to set a new one.
+  const afterLink = () => (mode === "link" ? "/account/password" : nextPath());
+
+  async function verifyCode(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    const { error } = await createClient().auth.verifyOtp({ email: email.trim(), token: code.trim(), type: "email" });
+    if (error) {
+      setError(/expired|invalid/i.test(error.message) ? "That code has expired or isn't right. Check it's from the newest email, or send a new one." : error.message);
+      setBusy(false);
+      return;
+    }
+    router.replace(afterLink());
+    router.refresh();
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError("");
     const supabase = createClient();
-    const redirect = `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath())}`;
+    const redirect = `${window.location.origin}/auth/callback?next=${encodeURIComponent(afterLink())}`;
     try {
       if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
@@ -88,13 +110,30 @@ export default function LoginPage() {
           <div className="grid gap-2 rounded-3xl border border-line bg-surface p-4">
             <p className="font-semibold">Check your email</p>
             <p className="text-sm text-muted">
-              {sent === "confirm" ? "We sent a link to confirm " : "We sent a sign-in link to "}
-              <b className="text-ink">{email}</b>. Open it on this device.
+              {sent === "confirm" ? "We sent a link to confirm " : "We sent a sign-in email to "}
+              <b className="text-ink">{email}</b>. Open the link on this device, or type the code from the email here.
             </p>
-            <button className="justify-self-start text-sm font-semibold text-accent" onClick={() => setSent(null)}>Back</button>
+            {sent === "link" && (
+              <form onSubmit={verifyCode} className="grid gap-3">
+                <input
+                  aria-label="Code from the email"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  placeholder="6-digit code"
+                  className={`${inputClass} text-center font-mono text-xl tracking-[0.4em]`}
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                />
+                {error && <p className="text-sm text-bad">{error}</p>}
+                <button className={buttonClass()} disabled={busy || code.length < 6}>{busy ? "Checking…" : "Sign in with code"}</button>
+              </form>
+            )}
+            <button className="justify-self-start text-sm font-semibold text-accent" onClick={() => { setSent(null); setCode(""); setError(""); }}>Back</button>
           </div>
         ) : (
           <>
+            {linkError && !error && <p className="rounded-2xl bg-urgent-soft px-4 py-3 text-sm">{linkError}</p>}
+            {mode === "link" && <p className="text-sm text-muted">We&apos;ll email you a sign-in link and code. Once you&apos;re in, you can set a new password.</p>}
             {mode !== "link" && (
               <div className="flex rounded-full border border-line bg-surface p-1">
                 {tab("signin", "Sign in")}
@@ -121,7 +160,7 @@ export default function LoginPage() {
               )}
               {error && <p className="text-sm text-bad">{error}</p>}
               <button className={buttonClass()} disabled={busy}>
-                {busy ? "One moment…" : mode === "signin" ? "Sign in" : mode === "signup" ? "Create account" : "Email me a sign-in link"}
+                {busy ? "One moment…" : mode === "signin" ? "Sign in" : mode === "signup" ? "Create account" : "Email me a link and code"}
               </button>
             </form>
             <button
@@ -129,7 +168,7 @@ export default function LoginPage() {
               className="justify-self-center text-sm font-semibold text-accent"
               onClick={() => { setMode(mode === "link" ? "signin" : "link"); setError(""); }}
             >
-              {mode === "link" ? "Use a password instead" : "Forgot your password? Email me a link instead"}
+              {mode === "link" ? "Use a password instead" : "Forgot or never set a password?"}
             </button>
           </>
         )}
