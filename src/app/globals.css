@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+/* Brand tokens carried over from the prototype (docs/prototype.html). */
+:root {
+  --bg: #E9EDE6; --surface: #FFFFFF; --sunk: #F3F6F1; --ink: #18221E; --muted: #5B6964; --line: #D5DCD4;
+  --accent: #1E5A4B; --accent-ink: #FFFFFF; --accent-soft: #DCEBE4;
+  --urgent: #E9A23B; --urgent-soft: #FBEBD1; --good: #2C7A4C; --good-soft: #DDF0E3; --bad: #A9433B; --bad-soft: #F6E0DD;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101614; --surface: #19221F; --sunk: #141C19; --ink: #E6ECE8; --muted: #97A59F; --line: #2A3631;
+    --accent: #72C3A9; --accent-ink: #0C1A15; --accent-soft: #1F3830;
+    --urgent: #F0B55A; --urgent-soft: #3A2D17; --good: #6CC98F; --good-soft: #1B3325; --bad: #E58A80; --bad-soft: #3A1F1C;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-sunk: var(--sunk);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-urgent: var(--urgent);
+  --color-urgent-soft: var(--urgent-soft);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono-face);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+h1, h2, h3 { font-family: var(--font-display), system-ui, sans-serif; text-wrap: balance; }

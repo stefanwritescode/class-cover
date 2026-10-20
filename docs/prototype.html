@@ -1,0 +1,416 @@
+<title>Stretch Cover Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: two live phones side by side (studio admin ↔ teacher) so a posted cover visibly pings the teacher; one phone at a time on mobile. */
+:root{
+  --bg:#E9EDE6; --surface:#FFFFFF; --sunk:#F3F6F1; --ink:#18221E; --muted:#5B6964; --line:#D5DCD4;
+  --accent:#1E5A4B; --accent-ink:#FFFFFF; --accent-soft:#DCEBE4;
+  --urgent:#E9A23B; --urgent-soft:#FBEBD1; --good:#2C7A4C; --good-soft:#DDF0E3; --bad:#A9433B; --bad-soft:#F6E0DD;
+  --frame:#1C2522;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body:"Figtree", system-ui, -apple-system, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101614; --surface:#19221F; --sunk:#141C19; --ink:#E6ECE8; --muted:#97A59F; --line:#2A3631;
+  --accent:#72C3A9; --accent-ink:#0C1A15; --accent-soft:#1F3830;
+  --urgent:#F0B55A; --urgent-soft:#3A2D17; --good:#6CC98F; --good-soft:#1B3325; --bad:#E58A80; --bad-soft:#3A1F1C;
+  --frame:#000000; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#101614; --surface:#19221F; --sunk:#141C19; --ink:#E6ECE8; --muted:#97A59F; --line:#2A3631;
+  --accent:#72C3A9; --accent-ink:#0C1A15; --accent-soft:#1F3830;
+  --urgent:#F0B55A; --urgent-soft:#3A2D17; --good:#6CC98F; --good-soft:#1B3325; --bad:#E58A80; --bad-soft:#3A1F1C;
+  --frame:#000000; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.45;padding-inline:16px;padding-block:28px 48px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.intro{max-width:880px;margin:0 auto 24px;display:grid;gap:8px}
+.intro h1{font-size:clamp(26px,4vw,36px);letter-spacing:-.01em}
+.intro p{margin:0;color:var(--muted);max-width:66ch}
+.sample{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 10px;justify-self:start}
+
+.switch{display:none;margin:0 auto 16px;max-width:400px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px}
+.switch button{flex:1;border:0;background:transparent;color:var(--muted);padding:8px 10px;border-radius:999px;font-weight:600;position:relative}
+.switch button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.switch .dot{position:absolute;top:6px;right:14px;width:8px;height:8px;border-radius:50%;background:var(--urgent)}
+
+.stage{display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+.col{display:grid;gap:10px;justify-items:center}
+.col-label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.phone{width:375px;max-width:100%;height:760px;background:var(--frame);border-radius:44px;padding:10px;box-shadow:0 30px 60px -30px rgba(0,0,0,.45)}
+.screen{position:relative;height:100%;background:var(--sunk);border-radius:34px;overflow:hidden;display:flex;flex-direction:column}
+.status{display:flex;justify-content:space-between;padding:12px 26px 4px;font-size:12px;font-weight:600}
+.apphead{padding:8px 18px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.apphead h2{font-size:22px}
+.apphead .who{font-size:12px;color:var(--muted)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}
+.content{flex:1;overflow-y:auto;padding:4px 14px 16px;display:grid;align-content:start;gap:12px}
+.tabs{display:flex;border-top:1px solid var(--line);background:var(--surface);padding:6px 6px 14px}
+.tabs button{flex:1;border:0;background:transparent;color:var(--muted);padding:8px 2px;font-size:12px;font-weight:600;display:grid;justify-items:center;gap:3px;position:relative}
+.tabs button[aria-current="true"]{color:var(--accent)}
+.tabs svg{width:20px;height:20px}
+.tabs .badge{position:absolute;top:4px;left:calc(50% + 6px);min-width:16px;height:16px;border-radius:8px;background:var(--urgent);color:#2A1C05;font-size:10px;display:grid;place-items:center;padding:0 4px}
+
+.sect{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:6px 2px -4px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:10px}
+.card.urgent{border-color:var(--urgent);box-shadow:0 0 0 3px var(--urgent-soft)}
+.row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.cls{font-family:var(--display);font-size:17px;font-weight:600;line-height:1.2}
+.meta{color:var(--muted);font-size:13px}
+.rate{font-family:var(--mono);font-size:16px;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:11.5px;padding:3px 9px;border-radius:999px;background:var(--sunk);border:1px solid var(--line);color:var(--muted)}
+.pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;letter-spacing:.02em}
+.pill.open{background:var(--urgent-soft);color:var(--ink)}
+.pill.filled{background:var(--good-soft);color:var(--good)}
+.pill.pref{background:var(--accent-soft);color:var(--accent)}
+.pill.locum{background:var(--sunk);color:var(--muted);border:1px solid var(--line)}
+.pill.pending{background:var(--bad-soft);color:var(--bad)}
+.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:600;background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
+.btn.small{padding:7px 11px;font-size:12.5px;border-radius:10px}
+.btn.full{width:100%}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.note{font-size:12px;color:var(--muted)}
+.empty{text-align:center;color:var(--muted);padding:28px 10px;font-size:13px}
+
+.ladder{display:grid;gap:6px;font-size:12.5px}
+.step{display:flex;gap:8px;align-items:center}
+.step i{width:8px;height:8px;border-radius:50%;background:var(--line);flex:none}
+.step.done i{background:var(--good)}
+.step.now i{background:var(--urgent)}
+
+.form{display:grid;gap:12px}
+.field{display:grid;gap:5px}
+.field label,.field .lbl{font-size:12px;font-weight:600;color:var(--muted)}
+.field select,.field input{width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px;font:inherit}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toggle-chip{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:5px 11px;font-size:12px}
+.toggle-chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13px}
+.check input{margin-top:3px;accent-color:var(--accent)}
+
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat .card{gap:2px}
+.big{font-family:var(--display);font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:8px 4px;border-bottom:1px solid var(--line);text-align:left}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.notif{position:absolute;left:10px;right:10px;top:10px;z-index:5;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:12px 14px;box-shadow:0 18px 40px -16px rgba(0,0,0,.45);display:grid;gap:8px;transform:translateY(-140%);transition:transform .35s cubic-bezier(.2,.9,.3,1.2)}
+.notif.show{transform:translateY(0)}
+.notif .app{display:flex;gap:8px;align-items:center;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.notif .app b{width:18px;height:18px;border-radius:5px;background:var(--accent);display:inline-block}
+.wa{font-size:11.5px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.toast{position:absolute;left:50%;bottom:86px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+
+@media (prefers-reduced-motion: reduce){.notif{transition:none}}
+@media (max-width:860px){
+  .switch{display:flex}
+  .col-label{display:none}
+  .stage[data-show="teacher"] .col.admin,.stage[data-show="admin"] .col.teacher{display:none}
+  .phone{height:720px}
+}
+@media (max-width:420px){
+  body{padding-inline:12px}
+  .phone{padding:0;background:transparent;box-shadow:none;height:auto}
+  .screen{border-radius:20px;border:1px solid var(--line);min-height:680px}
+}
+</style>
+
+<header class="intro">
+  <span class="sample">Prototype · sample data</span>
+  <h1>Stretch Cover</h1>
+  <p>Try it: on the studio phone, post a cover for a class. Watch Thandi's phone get pinged, accept it, and see the studio side update. Then tap "Can't make it" to see the class re-posted, or open Find to recruit instructors from the marketplace.</p>
+</header>
+
+<div class="switch" role="group" aria-label="Choose phone">
+  <button id="sw-admin" aria-pressed="true" data-view="admin">Studio manager</button>
+  <button id="sw-teacher" aria-pressed="false" data-view="teacher">Teacher<span class="dot" id="sw-dot" hidden></span></button>
+</div>
+
+<main class="stage" id="stage" data-show="admin">
+  <section class="col admin">
+    <div class="col-label">Studio manager · Naledi</div>
+    <div class="phone"><div class="screen" id="admin-screen"></div></div>
+  </section>
+  <section class="col teacher">
+    <div class="col-label">Teacher · Thandi (preferred cover)</div>
+    <div class="phone"><div class="screen" id="teacher-screen"></div></div>
+  </section>
+</main>
+
+<script>
+const RATE = 275;
+const QUALS = ['Stretch Reformer','Stretch Mat','BASI Comprehensive','BASI Mat','STOTT Reformer','Polestar Mat'];
+const TIMETABLE = [
+  {name:'Reformer Flow', studio:'Rosebank', time:'17:30', accepts:['Stretch Reformer','BASI Comprehensive','STOTT Reformer']},
+  {name:'Mat Foundations', studio:'Parkhurst', time:'18:30', accepts:['Stretch Mat','BASI Mat','Polestar Mat']},
+  {name:'Reformer Strength', studio:'Rosebank', time:'06:00', accepts:['Stretch Reformer','BASI Comprehensive']},
+  {name:'Stretch & Release', studio:'Parkhurst', time:'12:15', accepts:['Stretch Reformer','Stretch Mat']},
+];
+const teachers = [
+  {id:'t1', name:'Thandi Mokoena', tier:'preferred', quals:['Stretch Reformer','Stretch Mat'], fa:'Mar 2027'},
+  {id:'t2', name:'Jess Kruger', tier:'preferred', quals:['BASI Comprehensive'], fa:'Jan 2027'},
+  {id:'t3', name:'Lerato Nkosi', tier:'locum', quals:['Polestar Mat','Stretch Mat'], fa:'Aug 2027'},
+  {id:'t4', name:'Ruan van Wyk', tier:'locum', quals:['STOTT Reformer'], fa:'Nov 2026'},
+  {id:'t5', name:'Amy Pillay', tier:'pending', quals:['BASI Mat'], fa:'Jun 2027', cert:'BASI_Mat_certificate.pdf'},
+];
+teachers.forEach(t=>t.drops=0);
+const SHORT_NOTICE = 50, DROP_LIMIT = 3;
+const market = [
+  {id:'m1', name:'Sipho Dlamini', area:'Fourways', yrs:6, quals:['BASI Comprehensive'], open:['Cover','Permanent'], bio:'Reformer and rehab focus. Teaches weekday mornings and Saturdays.', fa:'Feb 2027'},
+  {id:'m2', name:'Megan Botha', area:'Sandton', yrs:3, quals:['Stretch Reformer','Stretch Mat'], open:['Cover','Locum'], bio:'Stretch-trained, moved back to Joburg from Cape Town. Free most evenings.', fa:'May 2027'},
+  {id:'m3', name:'Ayesha Khan', area:'Rosebank', yrs:9, quals:['Polestar Mat','STOTT Reformer'], open:['Locum'], bio:'Studio owner taking locum work between her own classes.', fa:'Oct 2027'},
+];
+let seq = 3;
+const requests = [
+  {id:'r1', name:'Mat Foundations', studio:'Parkhurst', day:'Tomorrow', time:'07:00', reason:'Sick', rate:RATE, accepts:['Stretch Mat','BASI Mat','Polestar Mat'], tier:'all', status:'open', posted:'40 min ago', filledBy:null},
+  {id:'r2', name:'Reformer Strength', studio:'Rosebank', day:'Today', time:'09:30', reason:'Sick', rate:RATE, accepts:['Stretch Reformer','BASI Comprehensive'], tier:'preferred', status:'filled', posted:'6:12', filledBy:'t2'},
+];
+const mine = [{name:'Reformer Flow', studio:'Rosebank', day:'Sat 18 Oct', time:'08:00', rate:RATE}];
+const paid = [
+  {date:'02 Oct', name:'Reformer Flow', studio:'Rosebank'},
+  {date:'07 Oct', name:'Stretch & Release', studio:'Parkhurst'},
+  {date:'09 Oct', name:'Mat Foundations', studio:'Parkhurst'},
+  {date:'14 Oct', name:'Reformer Strength', studio:'Rosebank'},
+];
+const ui = {adminTab:'requests', teacherTab:'open', meetFirst:true, form:{cls:0, day:'Today', reason:'Sick', rate:RATE, short:true, accepts:[...TIMETABLE[0].accepts], waterfall:true}, notif:null};
+
+const $ = s => document.querySelector(s);
+const T = id => teachers.find(t=>t.id===id);
+const initials = n => n.split(' ').map(p=>p[0]).join('').slice(0,2);
+const rand = n => 'R' + n.toLocaleString('en-ZA');
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const qualified = (t,r) => (t.tier==='locum'||t.tier==='preferred') && t.quals.some(q=>r.accepts.includes(q));
+const reached = r => teachers.filter(t => qualified(t,r) && (r.tier==='all' || t.tier==='preferred') && !(r.excl||[]).includes(t.id));
+const tierPill = t => `<span class="pill ${{preferred:'pref',locum:'locum',pending:'pending',meet:'open'}[t.tier]}">${{preferred:'Preferred',locum:'Locum',pending:'Checking docs',meet:'To meet'}[t.tier]}</span>`;
+const ME = 't1';
+
+const icons = {
+  list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>',
+  people:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.7 3 2.5 3.5 5.2"/></svg>',
+  rand:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>',
+  bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>',
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',
+  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.2-6 8-6s7 2 8 6"/></svg>',
+};
+const statusBar = '<div class="status"><span class="mono">9:41</span><span>●●● ▮</span></div>';
+
+/* ---------- Studio manager ---------- */
+function renderAdmin(){
+  const tabs = [['requests','Covers',icons.list],['post','Post',icons.plus],['team','Teachers',icons.people],['find','Find',icons.search],['pay','Pay',icons.rand]];
+  const pendingCount = teachers.filter(t=>t.tier==='pending'||t.tier==='meet').length;
+  let body = '';
+  if(ui.adminTab==='requests') body = adminRequests();
+  if(ui.adminTab==='post') body = adminPost();
+  if(ui.adminTab==='team') body = adminTeam();
+  if(ui.adminTab==='find') body = adminFind();
+  if(ui.adminTab==='pay') body = adminPay();
+  $('#admin-screen').innerHTML = `${statusBar}
+    <div class="apphead"><div><div class="who">Stretch Pilates · Studio manager</div><h2>${{requests:'Cover requests',post:'Post a cover',team:'Your teachers',find:'Find instructors',pay:'October pay'}[ui.adminTab]}</h2></div><div class="avatar">NM</div></div>
+    <div class="content">${body}</div>
+    <nav class="tabs">${tabs.map(([k,l,i])=>`<button data-atab="${k}" aria-current="${ui.adminTab===k}">${i}${l}${k==='team'&&pendingCount?`<span class="badge">${pendingCount}</span>`:''}</button>`).join('')}</nav>
+    <div class="toast" id="admin-toast"></div>`;
+}
+function adminRequests(){
+  const open = requests.filter(r=>r.status==='open'), done = requests.filter(r=>r.status!=='open');
+  const card = r => {
+    const reach = reached(r);
+    const filler = r.filledBy && T(r.filledBy);
+    return `<div class="card ${r.status==='open'?'urgent':''}">
+      <div class="row"><div><div class="cls">${esc(r.name)}</div><div class="meta">${r.day} · <span class="mono">${r.time}</span> · ${r.studio}</div></div>
+      <span class="pill ${r.status}">${r.status==='open'?'Needs cover':r.status==='filled'?'Covered':'Cancelled'}</span></div>
+      <div class="chips">${r.accepts.map(q=>`<span class="chip">${q}</span>`).join('')}</div>
+      ${r.status==='open' ? `<div class="ladder">
+          <div class="step done"><i></i>${r.repost?`Re-posted automatically: ${r.repost}`:`Posted ${r.posted} · reason: ${r.reason}`}</div>
+          <div class="step done"><i></i>Rate: <span class="mono">&nbsp;${rand(r.rate)}</span></div>
+          <div class="step ${r.tier==='preferred'?'now':'done'}"><i></i>Preferred cover pinged (push + WhatsApp)</div>
+          <div class="step ${r.tier==='all'?'now':''}"><i></i>${r.tier==='all'?'Vetted locums pinged':'Vetted locums: in 15 min if unclaimed'}</div>
+        </div>
+        <div class="note">${reach.length} qualified ${reach.length===1?'teacher':'teachers'} notified: ${reach.map(t=>t.name.split(' ')[0]).join(', ')||'nobody yet'}</div>
+        <div class="btns">${r.tier==='preferred'?`<button class="btn small" data-escalate="${r.id}">Open to locums now</button>`:''}<button class="btn small ghost" data-cancel="${r.id}">Cancel</button></div>`
+      : filler ? `<div class="row"><div class="step done"><i></i>Covered by <b>&nbsp;${filler.name}</b></div><span class="rate">${rand(r.rate)}</span></div>` : ''}
+    </div>`;
+  };
+  return `${open.length?'<div class="sect">Open</div>'+open.map(card).join(''):'<div class="empty">No open cover requests. Post one when someone calls in sick.</div>'}
+    ${done.length?'<div class="sect">Today</div>'+done.map(card).join(''):''}`;
+}
+function adminPost(){
+  const f = ui.form, c = TIMETABLE[f.cls];
+  const preview = reached({accepts:f.accepts, tier:f.waterfall?'preferred':'all'});
+  return `<form class="form" id="post-form">
+    <div class="field"><label for="f-cls">Class</label><select id="f-cls">${TIMETABLE.map((t,i)=>`<option value="${i}" ${i==f.cls?'selected':''}>${t.name} · ${t.time} · ${t.studio}</option>`).join('')}</select></div>
+    <div class="two">
+      <div class="field"><label for="f-day">Day</label><select id="f-day">${['Today','Tomorrow'].map(d=>`<option ${d===f.day?'selected':''}>${d}</option>`).join('')}</select></div>
+      <div class="field"><label for="f-reason">Reason</label><select id="f-reason">${['Sick','Family emergency','Injury','Other'].map(d=>`<option ${d===f.reason?'selected':''}>${d}</option>`).join('')}</select></div>
+    </div>
+    <div class="field"><span class="lbl">Teachers must be trained in one of</span><div class="chips">${QUALS.map(q=>`<button type="button" class="toggle-chip" data-qual="${q}" aria-pressed="${f.accepts.includes(q)}">${q}</button>`).join('')}</div></div>
+    <div class="field"><label for="f-rate">Cover rate (R)</label><input id="f-rate" class="mono" type="number" min="0" step="5" inputmode="numeric" value="${f.rate}"><span class="note">Studio default is ${rand(RATE)}. Raise it for a hard-to-fill class.</span></div>
+    <label class="check" for="f-wf"><input type="checkbox" id="f-wf" ${f.waterfall?'checked':''}><span>Ask preferred cover first, then open to vetted locums after 15 minutes</span></label>
+    <div class="card" style="background:var(--sunk)"><div class="note">Will notify now by push + WhatsApp</div><div><b>${preview.length} ${preview.length===1?'teacher':'teachers'}</b> <span class="meta">${preview.map(t=>t.name.split(' ')[0]).join(', ')||'no one matches these qualifications'}</span></div></div>
+    <button class="btn full" type="submit" ${f.accepts.length?'':'disabled'}>Post cover for ${c.name}</button>
+  </form>`;
+}
+function adminTeam(){
+  const groups = [['meet','Meet first'],['pending','Checking documents'],['preferred','Preferred cover'],['locum','Vetted locums']];
+  const setting = `<div class="card" style="background:var(--sunk)"><label class="check" for="f-meet"><input type="checkbox" id="f-meet" ${ui.meetFirst?'checked':''}><span><b>Meet new instructors before approving them</b><br><span class="meta">A coffee, video call or trial class. Turn off to approve on documents alone.</span></span></label>
+    <div class="note">Dropout rule: ${DROP_LIMIT} late dropouts in a quarter moves a preferred teacher to locum.</div></div>`;
+  return setting + groups.map(([tier,label])=>{
+    const list = teachers.filter(t=>t.tier===tier); if(!list.length) return '';
+    return `<div class="sect">${label}</div>` + list.map(t=>`<div class="card">
+      <div class="row"><div class="row" style="justify-content:flex-start"><div class="avatar">${initials(t.name)}</div><div><div style="font-weight:600">${t.name}</div><div class="meta">First aid valid to ${t.fa}${t.drops?` · <span style="color:var(--bad)">${t.drops} dropout${t.drops>1?'s':''} this quarter</span>`:''}</div></div></div>
+      ${tierPill(t)}</div>
+      <div class="chips">${t.quals.map(q=>`<span class="chip">${q}</span>`).join('')}</div>
+      ${t.tier==='meet'?`<div class="note">Meeting requested. ${t.name.split(' ')[0]} picks a time from your slots.</div><div class="btns"><button class="btn small" data-met="${t.id}">Mark as met</button><button class="btn small ghost" data-decline="${t.id}">Not a fit</button></div>`:''}
+      ${t.tier==='pending'?`<div class="note">Uploaded <span class="mono">${t.cert}</span> · ID and bank details on file</div><div class="btns"><button class="btn small" data-approve="${t.id}">Approve as locum</button><button class="btn small ghost">View certificate</button></div>`:''}
+      ${t.tier==='locum'?`<div class="btns"><button class="btn small ghost" data-promote="${t.id}">Make preferred</button></div>`:''}
+    </div>`).join('');
+  }).join('');
+}
+function adminFind(){
+  const linked = id => teachers.some(t=>t.from===id);
+  return `<div class="note">Instructors who chose to be visible to verified studios. Their contact details are shared only if they accept your request.</div>` +
+    market.map(m=>`<div class="card">
+      <div class="row"><div class="row" style="justify-content:flex-start"><div class="avatar">${initials(m.name)}</div><div><div style="font-weight:600">${m.name}</div><div class="meta">${m.area} · ${m.yrs} yrs teaching</div></div></div></div>
+      <div class="chips">${m.quals.map(q=>`<span class="chip">${q}</span>`).join('')}</div>
+      <div class="meta">${esc(m.bio)}</div>
+      <div class="note">Open to: ${m.open.join(', ')}</div>
+      ${linked(m.id)?`<div class="step done"><i></i>In your teachers list</div>`
+        :`<div class="btns"><button class="btn small" data-recruit="${m.id}">${ui.meetFirst?'Ask to meet':'Invite to cover for us'}</button></div>`}
+    </div>`).join('');
+}
+function adminPay(){
+  const rows = {};
+  const add = (id,n=1)=>{rows[id]=(rows[id]||0)+n};
+  add('t1', paid.length*RATE);
+  requests.filter(r=>r.status==='filled').forEach(r=>add(r.filledBy, r.rate));
+  add('t3',2*RATE); add('t4',RATE);
+  const amt = Object.values(rows).reduce((a,b)=>a+b,0);
+  const count = paid.length + requests.filter(r=>r.status==='filled').length + 3;
+  return `<div class="stat"><div class="card"><div class="note">Covers this month</div><div class="big">${count}</div></div><div class="card"><div class="note">To pay on 25 Oct</div><div class="big">${rand(amt)}</div></div></div>
+    <div class="card"><table><thead><tr><th>Teacher</th><th class="num">Amount</th></tr></thead><tbody>
+    ${Object.entries(rows).map(([id,n])=>`<tr><td>${T(id).name}</td><td class="num">${rand(n)}</td></tr>`).join('')}
+    </tbody></table>
+    <div class="note">Each cover is confirmed after the class runs. Locums get a self-billed invoice for their records.</div>
+    <div class="btns"><button class="btn small" data-toast="admin-toast|Bank payment file ready (prototype)">Create bank payment file</button><button class="btn small ghost" data-toast="admin-toast|Sent to Xero (prototype)">Send to Xero</button></div></div>`;
+}
+
+/* ---------- Teacher ---------- */
+function renderTeacher(){
+  const me = T(ME);
+  const open = requests.filter(r=>r.status==='open' && reached(r).includes(me));
+  const tabs = [['open','Covers',icons.bell],['mine','My classes',icons.cal],['earn','Earnings',icons.rand],['me','Profile',icons.user]];
+  let body = '';
+  if(ui.teacherTab==='open') body = open.length ? '<div class="sect">You can cover these</div>' + open.map(r=>`<div class="card urgent">
+      <div class="row"><div><div class="cls">${esc(r.name)}</div><div class="meta">${r.day} · <span class="mono">${r.time}</span> · Stretch ${r.studio}</div></div><span class="rate">${rand(r.rate)}</span></div>
+      <div class="note">Posted ${r.posted}. First to accept gets the class.</div>
+      <button class="btn full" data-accept="${r.id}">Accept cover</button></div>`).join('')
+    : '<div class="empty">No covers right now. We\'ll ping you by push and WhatsApp when a class you\'re trained for needs someone.</div>';
+  if(ui.teacherTab==='mine') body = mine.length ? '<div class="sect">Upcoming covers</div>' + mine.map((m,i)=>`<div class="card"><div class="row"><div><div class="cls">${m.name}</div><div class="meta">${m.day} · <span class="mono">${m.time}</span> · Stretch ${m.studio}</div></div><span class="rate">${rand(m.rate)}</span></div><div class="btns"><button class="btn small ghost" data-toast="teacher-toast|Added to your calendar (prototype)">Add to calendar</button><button class="btn small ghost" data-drop="${i}">Can't make it</button></div></div>`).join('')
+    + `<div class="note">If you drop out, the class is re-posted to other teachers straight away. ${DROP_LIMIT} late dropouts in a quarter and you move from preferred to locum. You have ${me.drops}.</div>`
+    : '<div class="empty">No upcoming covers.</div>';
+  if(ui.teacherTab==='earn'){
+    const pending = mine.length;
+    body = `<div class="stat"><div class="card"><div class="note">Paid on 25 Oct</div><div class="big">${rand(paid.length*RATE)}</div></div><div class="card"><div class="note">Booked, not yet taught</div><div class="big">${rand(pending*RATE)}</div></div></div>
+      <div class="card"><table><thead><tr><th>Date</th><th>Class</th><th class="num">Rate</th></tr></thead><tbody>${paid.map(p=>`<tr><td class="mono">${p.date}</td><td>${p.name}<div class="meta">${p.studio}</div></td><td class="num">${rand(RATE)}</td></tr>`).join('')}</tbody></table>
+      <div class="note">Paid by EFT to your account ending <span class="mono">4417</span></div></div>`;
+  }
+  if(ui.teacherTab==='me') body = `<div class="card"><div class="row" style="justify-content:flex-start"><div class="avatar">${initials(me.name)}</div><div><div style="font-weight:600">${me.name}</div>${tierPill(me)}<span class="meta"> at Stretch Pilates</span></div></div></div>
+    <div class="sect">Who can see my profile</div><div class="card">
+      <label class="check" for="v-private"><input id="v-private" name="vis" type="radio"><span><b>Only studios I work with</b><br><span class="meta">Other studios can't find you</span></span></label>
+      <label class="check" for="v-verified"><input id="v-verified" name="vis" type="radio" checked><span><b>Verified studios on Stretch Cover</b><br><span class="meta">They see your name, area and training, never your phone, email, ID or bank details. A studio can send you a request, and your contact details are only shared if you accept.</span></span></label>
+      <div class="lbl note">Open to</div><div class="chips"><span class="chip">Cover</span><span class="chip">Locum work</span><span class="chip" style="opacity:.6">Permanent roles</span></div></div>
+    <div class="sect">Training</div><div class="card"><div class="chips">${me.quals.map(q=>`<span class="chip">${q}</span>`).join('')}</div><div class="note">First aid valid to ${me.fa}</div><button class="btn small ghost">Upload a certificate</button></div>
+    <div class="sect">Notify me by</div><div class="card"><label class="check" for="n-push"><input id="n-push" type="checkbox" checked>Push notification</label><label class="check" for="n-wa"><input id="n-wa" type="checkbox" checked>WhatsApp</label><label class="check" for="n-studio"><input id="n-studio" type="checkbox" checked>Rosebank and Parkhurst studios</label></div>`;
+  const n = ui.notif && requests.find(r=>r.id===ui.notif);
+  $('#teacher-screen').innerHTML = `${statusBar}
+    <div class="apphead"><div><div class="who">Stretch Cover</div><h2>${{open:'Open covers',mine:'My classes',earn:'Earnings',me:'Profile'}[ui.teacherTab]}</h2></div><div class="avatar">TM</div></div>
+    <div class="content">${body}</div>
+    <nav class="tabs">${tabs.map(([k,l,i])=>`<button data-ttab="${k}" aria-current="${ui.teacherTab===k}">${i}${l}${k==='open'&&open.length?`<span class="badge">${open.length}</span>`:''}</button>`).join('')}</nav>
+    <div class="notif ${n?'show':''}" role="status">${n?`<div class="app"><b></b>Stretch Cover · now</div>
+      <div><b>Cover needed: ${esc(n.name)}</b><div class="meta">${n.day} ${n.time} · ${n.studio} · ${rand(n.rate)}</div></div>
+      <div class="btns"><button class="btn small" data-accept="${n.id}">Accept</button><button class="btn small ghost" data-dismiss>Not this time</button></div>
+      <div class="wa">Also sent to your WhatsApp</div>`:''}</div>
+    <div class="toast" id="teacher-toast"></div>`;
+  $('#sw-dot').hidden = !open.length;
+}
+
+function toast(id,msg){const el=document.getElementById(id); if(!el) return; el.textContent=msg; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),2200);}
+function render(){renderAdmin();renderTeacher();}
+
+document.addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  const d = b.dataset;
+  if(d.atab){ui.adminTab=d.atab;}
+  else if(d.ttab){ui.teacherTab=d.ttab;}
+  else if(d.view){$('#stage').dataset.show=d.view; document.querySelectorAll('.switch button').forEach(x=>x.setAttribute('aria-pressed', x===b));return;}
+  else if(d.qual){const a=ui.form.accepts; const i=a.indexOf(d.qual); i<0?a.push(d.qual):a.splice(i,1);}
+  else if(d.escalate){const r=requests.find(x=>x.id===d.escalate); r.tier='all'; toast('admin-toast','Opened to vetted locums');}
+  else if(d.cancel){const r=requests.find(x=>x.id===d.cancel); r.status='cancelled'; if(ui.notif===r.id) ui.notif=null;}
+  else if(d.approve){T(d.approve).tier='locum'; toast('admin-toast','Approved. They\'ll get locum covers now');}
+  else if(d.met){T(d.met).tier='pending'; T(d.met).cert=T(d.met).cert||'Certificates_and_first_aid.pdf';}
+  else if(d.decline){teachers.splice(teachers.indexOf(T(d.decline)),1);}
+  else if(d.recruit){
+    const m = market.find(x=>x.id===d.recruit);
+    teachers.push({id:'t'+m.id, from:m.id, name:m.name, tier:ui.meetFirst?'meet':'pending', quals:[...m.quals], fa:m.fa, drops:0, cert:'Certificates_and_first_aid.pdf'});
+    toast('admin-toast', `Request sent. ${m.name.split(' ')[0]} accepted (prototype)`);
+  }
+  else if(d.drop!==undefined){
+    const m = mine.splice(+d.drop,1)[0], me = T(ME);
+    me.drops++; if(me.drops>=DROP_LIMIT && me.tier==='preferred') me.tier='locum';
+    let r = m.reqId && requests.find(x=>x.id===m.reqId);
+    if(!r){r = {id:'r'+(seq++), name:m.name, studio:m.studio, day:m.day, time:m.time, reason:'Sick', rate:m.rate, accepts:[...(TIMETABLE.find(c=>c.name===m.name)||TIMETABLE[0]).accepts]}; requests.unshift(r);}
+    Object.assign(r,{status:'open', filledBy:null, tier:'preferred', posted:'just now', repost:`${me.name.split(' ')[0]} can't make it`, excl:[ME]});
+    render();
+    toast('teacher-toast','Class handed back and re-posted');
+    toast('admin-toast',`${me.name.split(' ')[0]} dropped ${m.name}. Re-posted automatically`);
+    return;
+  }
+  else if(d.promote){T(d.promote).tier='preferred';}
+  else if(d.accept){
+    const r=requests.find(x=>x.id===d.accept);
+    if(r.status==='open'){r.status='filled'; r.filledBy=ME; mine.unshift({reqId:r.id,name:r.name,studio:r.studio,day:r.day,time:r.time,rate:r.rate});}
+    ui.notif=null; ui.teacherTab='mine'; render();
+    toast('teacher-toast','You\'re on. Added to My classes'); toast('admin-toast',`Thandi is covering ${r.name}`); return;
+  }
+  else if(d.dismiss){ui.notif=null;}
+  else if(d.toast){const [id,msg]=d.toast.split('|'); toast(id,msg); return;}
+  else return;
+  render();
+});
+document.addEventListener('change', e=>{
+  const f = ui.form;
+  if(e.target.id==='f-cls'){f.cls=+e.target.value; f.accepts=[...TIMETABLE[f.cls].accepts]; render();}
+  if(e.target.id==='f-day') f.day=e.target.value;
+  if(e.target.id==='f-reason') f.reason=e.target.value;
+  if(e.target.id==='f-wf'){f.waterfall=e.target.checked; render();}
+  if(e.target.id==='f-rate'){const v=Math.round(+e.target.value); f.rate = v>0 ? v : RATE; render();}
+  if(e.target.id==='f-meet'){ui.meetFirst=e.target.checked; render();}
+});
+document.addEventListener('submit', e=>{
+  if(e.target.id!=='post-form') return;
+  e.preventDefault();
+  const f = ui.form, c = TIMETABLE[f.cls];
+  const r = {id:'r'+(seq++), name:c.name, studio:c.studio, day:f.day, time:c.time, reason:f.reason, rate:f.rate, accepts:[...f.accepts], tier:f.waterfall?'preferred':'all', status:'open', posted:'just now', filledBy:null};
+  requests.unshift(r);
+  ui.adminTab='requests'; f.rate = RATE;
+  const reachesMe = reached(r).includes(T(ME));
+  ui.notif = reachesMe ? r.id : null;
+  render();
+  toast('admin-toast', `Sent to ${reached(r).length} ${reached(r).length===1?'teacher':'teachers'}`);
+  if(!reachesMe) toast('teacher-toast','Not pinged: Thandi isn\'t trained for this class');
+});
+render();
+</script>
