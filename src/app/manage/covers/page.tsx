@@ -27,6 +27,7 @@ type Req = {
   status: "open" | "filled" | "cancelled";
   locations: { name: string } | null;
   cover_assignments: Assignment[];
+  notifications: { status: string; channel: string }[];
 };
 
 export default async function CoversPage({ searchParams }: { searchParams: Promise<{ posted?: string }> }) {
@@ -36,7 +37,7 @@ export default async function CoversPage({ searchParams }: { searchParams: Promi
   const [{ data, error }, { data: s }] = await Promise.all([
     supabase
       .from("cover_requests")
-      .select("id, class_name, starts_at, duration_minutes, rate, reason, notes, urgent, wave, wave_opened_at, status, locations(name), cover_assignments(id, dropped_at, checked_in_at, confirmed_at, rating, profiles(full_name))")
+      .select("id, class_name, starts_at, duration_minutes, rate, reason, notes, urgent, wave, wave_opened_at, status, locations(name), cover_assignments(id, dropped_at, checked_in_at, confirmed_at, rating, profiles(full_name)), notifications(status, channel)")
       .eq("studio_id", studio.id)
       .gte("starts_at", since)
       .order("starts_at"),
@@ -76,7 +77,7 @@ export default async function CoversPage({ searchParams }: { searchParams: Promi
       headerExtra={<Link href="/manage/post" className="inline-flex items-center gap-2 rounded-full bg-accent-ink px-4 py-2 text-sm font-semibold text-accent">{Icon.plus} Post a cover</Link>}
     >
       {error && <ErrorNote message={error.message} />}
-      {posted && <Card tone="sunk"><p className="text-sm"><b>Posted.</b> Qualified teachers can see it now. WhatsApp alerts come in the next step of the build.</p></Card>}
+      {posted && <Card tone="sunk"><p className="text-sm"><b>Posted.</b> Qualified teachers can see it now, and those who opted in get a WhatsApp.</p></Card>}
 
       {open.length > 0 && (
         <Section title="Needs cover" aside={`${open.length}`}>
@@ -91,6 +92,14 @@ export default async function CoversPage({ searchParams }: { searchParams: Promi
                   <Pill tone="urgent">{startsIn(r.starts_at) ? `Starts ${startsIn(r.starts_at)}` : "Starting"}</Pill>
                   {r.cover_assignments.some((a) => a.dropped_at) && <Pill>Re-posted after a dropout</Pill>}
                 </div>
+                {(() => {
+                  const wa = r.notifications.filter((n) => n.channel === "whatsapp");
+                  const ok = wa.filter((n) => n.status === "sent").length;
+                  const failed = wa.filter((n) => n.status === "failed").length;
+                  return wa.length ? (
+                    <p className="text-xs text-muted">WhatsApp sent to {ok} teacher{ok === 1 ? "" : "s"}{failed ? `, ${failed} failed` : ""}</p>
+                  ) : null;
+                })()}
                 <ol className="grid gap-1.5 text-sm">
                   <li className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-good" />Preferred teachers can accept</li>
                   <li className="flex items-center gap-2">

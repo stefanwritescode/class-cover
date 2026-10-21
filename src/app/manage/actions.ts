@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+import { notifyRequest } from "@/lib/notify";
 import { requireManager, type Stage } from "@/lib/session";
 
 const STAGES: Stage[] = ["to_meet", "checking_documents", "locum", "preferred", "declined"];
@@ -95,6 +97,8 @@ export async function postCover(formData: FormData) {
     const { error: aErr } = await supabase.from("cover_request_access").insert({ request_id: req.id, access_notes: access });
     if (aErr) throw new Error(aErr.message);
   }
+  // Send WhatsApp alerts after the response, so posting stays instant.
+  after(() => notifyRequest(req.id).catch((e) => console.error("notify failed", e)));
   revalidatePath("/manage/covers");
   const { redirect } = await import("next/navigation");
   redirect("/manage/covers?posted=1");
@@ -102,12 +106,10 @@ export async function postCover(formData: FormData) {
 
 export async function openToEveryone(formData: FormData) {
   const { supabase, studio } = await requireManager();
-  const { error } = await supabase
-    .from("cover_requests")
-    .update({ wave: "all" })
-    .eq("id", String(formData.get("request_id")))
-    .eq("studio_id", studio.id);
+  const requestId = String(formData.get("request_id"));
+  const { error } = await supabase.from("cover_requests").update({ wave: "all" }).eq("id", requestId).eq("studio_id", studio.id);
   if (error) throw new Error(error.message);
+  after(() => notifyRequest(requestId).catch((e) => console.error("notify failed", e)));
   revalidatePath("/manage/covers");
 }
 

@@ -31,6 +31,8 @@ Last-minute cover app for Pilates studios, starting with Stretch Pilates (South 
 - Pay: only manager-confirmed covers count. Monthly invoice at `/manage/pay/invoice`, bank file and Xero CSV at `/manage/pay/export`.
 - Pricing: free for instructors. Studios will be charged later; `cover_assignments.platform_fee` is recorded per cover (0 for now) and shown on the invoice.
 
+- WhatsApp alerts: `src/lib/notify.ts` asks `notify_targets()` (service role only) who is due an alert, claims a `notifications` row per teacher+wave (unique, so no double sends), then ManyChat: find/create subscriber by WhatsApp phone, set custom fields `cc_class`, `cc_when`, `cc_studio`, `cc_rate`, `cc_link`, and `sendFlow` the automation in `MANYCHAT_COVER_FLOW_NS` (its first step is the approved template). Triggered on post, "open to locums", and dropout; a Supabase pg_cron job hits `/api/notify/sweep` every minute for the timed locum wave.
+
 ## Conventions
 - Money in whole rands (int). Display as `R275` (en-ZA). Times stored as timestamptz, shown in Africa/Johannesburg.
 - Schema changes go in a new file under `supabase/migrations/`. Never edit an applied migration.

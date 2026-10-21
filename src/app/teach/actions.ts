@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+import { notifyRequest } from "@/lib/notify";
 import { redirect } from "next/navigation";
 import { getViewer } from "@/lib/session";
 
@@ -20,8 +22,12 @@ export async function acceptCover(formData: FormData) {
 
 export async function dropCover(formData: FormData) {
   const { supabase } = await teacher();
-  const { error } = await supabase.rpc("drop_cover", { p_assignment: String(formData.get("assignment_id")) });
+  const assignmentId = String(formData.get("assignment_id"));
+  const { data: a } = await supabase.from("cover_assignments").select("request_id").eq("id", assignmentId).single();
+  const { error } = await supabase.rpc("drop_cover", { p_assignment: assignmentId });
   if (error) redirect(`/teach?msg=${encodeURIComponent(error.message)}`);
+  // The class is back out: alert preferred teachers again.
+  if (a?.request_id) after(() => notifyRequest(a.request_id).catch((e) => console.error("notify failed", e)));
   revalidatePath("/teach");
   redirect("/teach?msg=dropped");
 }
