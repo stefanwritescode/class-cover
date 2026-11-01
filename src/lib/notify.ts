@@ -11,11 +11,12 @@ export async function notifyRequest(requestId: string) {
   const db = createAdminClient();
   if (!db || !manychatConfigured()) return { sent: 0, skipped: "not configured" };
 
-  const { data: req } = await db
+  const { data: req, error: reqError } = await db
     .from("cover_requests")
     .select("class_name, starts_at, rate, urgent, locations(name)")
     .eq("id", requestId)
     .single();
+  if (reqError) throw new Error(`Couldn't load cover ${requestId}: ${reqError.message}`);
   if (!req) return { sent: 0 };
   const { data: targets, error } = await db.rpc("notify_targets", { p_request: requestId });
   if (error) throw new Error(error.message);
@@ -58,7 +59,12 @@ export async function notifyRequest(requestId: string) {
 export async function sweep() {
   const db = createAdminClient();
   if (!db || !manychatConfigured()) return { checked: 0, sent: 0, skipped: "not configured" };
-  const { data } = await db.from("cover_requests").select("id").eq("status", "open").gt("starts_at", new Date().toISOString());
+  // notify_targets is restricted to the service role, so this fails loudly if the key is wrong.
+  // A publishable key would otherwise just see zero rows and look like nothing was due.
+  const { error: keyError } = await db.rpc("notify_targets", { p_request: "00000000-0000-0000-0000-000000000000" });
+  if (keyError) return { checked: 0, sent: 0, error: `Supabase key problem: ${keyError.message}` };
+  const { data, error } = await db.from("cover_requests").select("id").eq("status", "open").gt("starts_at", new Date().toISOString());
+  if (error) return { checked: 0, sent: 0, error: error.message };
   let sent = 0;
   for (const r of data ?? []) sent += (await notifyRequest(r.id)).sent;
   return { checked: data?.length ?? 0, sent };
