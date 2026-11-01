@@ -33,6 +33,8 @@ Last-minute cover app for Pilates studios, starting with Stretch Pilates (South 
 
 - WhatsApp alerts: `src/lib/notify.ts` asks `notify_targets()` (service role only) who is due an alert, claims a `notifications` row per teacher+wave (unique, so no double sends), then ManyChat: find/create subscriber by WhatsApp phone, set custom fields `cc_class`, `cc_when`, `cc_studio`, `cc_rate`, `cc_link`, and `sendFlow` the automation in `MANYCHAT_COVER_FLOW_NS` (its first step is the approved template). Triggered on post, "open to locums", and dropout; a Supabase pg_cron job hits `/api/notify/sweep` every minute for the timed locum wave.
 
+- Connect WhatsApp: the ManyChat API can't find existing WhatsApp contacts by number, so teachers link themselves. The app shows a wa.me link prefilled with `CLASSCOVER <whatsapp_link_code>`; ManyChat's "Class Cover connect" automation (keyword trigger + External Request) POSTs `{subscriber_id, text}` to `/api/manychat/link`, which confirms the contact with ManyChat and saves `manychat_subscriber_id`.
+
 ## Conventions
 - Money in whole rands (int). Display as `R275` (en-ZA). Times stored as timestamptz, shown in Africa/Johannesburg.
 - Schema changes go in a new file under `supabase/migrations/`. Never edit an applied migration.

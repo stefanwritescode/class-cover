@@ -61,3 +61,19 @@ export async function sendCoverAlert(subscriberId: string, fields: Record<string
   }
   await call("/fb/sending/sendFlow", { body: { subscriber_id: id, flow_ns: process.env.MANYCHAT_COVER_FLOW_NS } });
 }
+
+export async function getSubscriber(subscriberId: string) {
+  return (await call("/fb/subscriber/getInfo", { method: "GET", query: { subscriber_id: subscriberId } })) as {
+    id: string | number;
+    last_input_text?: string | null;
+  };
+}
+
+/** The keyword teachers send to connect. ManyChat's "Class Cover connect" automation triggers on it. */
+export const CONNECT_KEYWORD = "CLASSCOVER";
+
+/** The Stretch Pilates WhatsApp Business number, in international format without a plus. */
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "27781966331";
+
+export const whatsappConnectUrl = (code: string) =>
+  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`${CONNECT_KEYWORD} ${code}`)}`;

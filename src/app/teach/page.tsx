@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getViewer, STAGE_LABEL, type Stage } from "@/lib/session";
 import { AppShell, buttonClass, Card, Icon, Pill, Section } from "@/components/ui";
 import { fmtDay, fmtTime, rand, saDate, shortLocation, startsIn } from "@/lib/format";
+import { ConnectWhatsApp } from "@/components/connect-whatsapp";
 import { teacherNav } from "./nav";
 import { acceptCover, dropCover } from "./actions";
 
@@ -32,7 +33,7 @@ export default async function TeacherCovers({ searchParams }: { searchParams: Pr
   const { msg } = await searchParams;
   const nowIso = new Date().toISOString();
 
-  const [{ data: links }, { data: openData }, { data: mineData }] = await Promise.all([
+  const [{ data: links }, { data: openData }, { data: mineData }, { data: contact }] = await Promise.all([
     supabase.from("studio_teachers").select("stage, studios(name)").eq("teacher_id", user.id),
     supabase.from("cover_requests").select("id, class_name, starts_at, duration_minutes, rate, notes, urgent, locations(name)").eq("status", "open").gt("starts_at", nowIso).order("starts_at"),
     supabase
@@ -41,6 +42,7 @@ export default async function TeacherCovers({ searchParams }: { searchParams: Pr
       .eq("teacher_id", user.id)
       .is("dropped_at", null)
       .gt("cover_requests.starts_at", new Date(Date.now() - 2 * 3600_000).toISOString()),
+    supabase.from("profile_contacts").select("whatsapp_opt_in, whatsapp_connected_at, whatsapp_link_code").eq("profile_id", user.id).maybeSingle(),
   ]);
   const open = (openData ?? []) as unknown as OpenReq[];
   const mine = ((mineData ?? []) as unknown as Mine[]).sort((a, b) => a.cover_requests.starts_at.localeCompare(b.cover_requests.starts_at));
@@ -64,6 +66,7 @@ export default async function TeacherCovers({ searchParams }: { searchParams: Pr
       nav={teacherNav("covers", open.length)}
     >
       {message && <Card tone="sunk"><p className="text-sm">{message}</p></Card>}
+      {contact?.whatsapp_opt_in && !contact.whatsapp_connected_at && contact.whatsapp_link_code && <ConnectWhatsApp code={contact.whatsapp_link_code} />}
       {expired.length > 0 && (
         <Card tone="urgent">
           <p className="font-semibold">Your {expired.join(" and ")} has expired</p>
@@ -74,7 +77,7 @@ export default async function TeacherCovers({ searchParams }: { searchParams: Pr
       {approved && (
         <Section title="Open covers" aside={open.length ? "First to accept gets it" : undefined}>
           {open.length === 0 && (
-            <Card tone="sunk"><p className="text-sm text-muted">When a class you&apos;re trained for needs cover, it shows up here. WhatsApp alerts are coming next.</p></Card>
+            <Card tone="sunk"><p className="text-sm text-muted">When a class you&apos;re trained for needs cover, it shows up here and you get a WhatsApp.</p></Card>
           )}
           {open.map((r) => (
             <Card key={r.id} tone="urgent">

@@ -13,7 +13,7 @@ type Teacher = {
     area: string | null;
     years_teaching: number | null;
     first_aid_expiry: string | null;
-    profile_contacts: { phone: string | null } | null;
+    profile_contacts: { phone: string | null; whatsapp_connected_at: string | null } | null;
     profile_trainings: Training[];
   } | null;
 };
@@ -57,7 +57,7 @@ export default async function TeachersPage() {
   const { data, error } = await supabase
     .from("studio_teachers")
     .select(
-      "teacher_id, stage, created_at, profiles(full_name, area, years_teaching, first_aid_expiry, profile_contacts(phone), profile_trainings!profile_trainings_profile_id_fkey(training_id, certificate_path, verified_at, trainings(name)))",
+      "teacher_id, stage, created_at, profiles(full_name, area, years_teaching, first_aid_expiry, profile_contacts(phone, whatsapp_connected_at), profile_trainings!profile_trainings_profile_id_fkey(training_id, certificate_path, verified_at, trainings(name)))",
     )
     .eq("studio_id", studio.id)
     .order("created_at", { ascending: false });
@@ -121,6 +121,9 @@ export default async function TeachersPage() {
                         {p.area && <span className="inline-flex items-center gap-1">{Icon.pin}{p.area}</span>}
                         {p.profile_contacts?.phone && <span className="inline-flex items-center gap-1 font-mono">{Icon.phone}{p.profile_contacts.phone}</span>}
                         {p.years_teaching != null && <span>{p.years_teaching} yrs teaching</span>}
+                        <span className={p.profile_contacts?.whatsapp_connected_at ? "text-good" : "text-bad"}>
+                          WhatsApp {p.profile_contacts?.whatsapp_connected_at ? "connected" : "not connected"}
+                        </span>
                       </div>
                     </div>
                   </div>

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getViewer } from "@/lib/session";
 import { AppShell, buttonClass, Card, Field, inputClass, Section } from "@/components/ui";
 import { shortLocation } from "@/lib/format";
+import { ConnectWhatsApp } from "@/components/connect-whatsapp";
 import { teacherNav } from "../nav";
 import { saveDetails, savePreferences } from "../actions";
 
@@ -29,7 +30,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
   const { saved } = await searchParams;
   const [{ data: prefs }, { data: contact }, { data: priv }, { data: locations }] = await Promise.all([
     supabase.from("teacher_preferences").select("*").eq("profile_id", user.id).maybeSingle(),
-    supabase.from("profile_contacts").select("phone, whatsapp_opt_in").eq("profile_id", user.id).maybeSingle(),
+    supabase.from("profile_contacts").select("phone, whatsapp_opt_in, whatsapp_connected_at, whatsapp_link_code").eq("profile_id", user.id).maybeSingle(),
     supabase.from("profile_private").select("bank_name, bank_account_number, bank_branch_code").eq("profile_id", user.id).maybeSingle(),
     supabase.from("locations").select("id, name").order("name"),
   ]);
@@ -37,6 +38,11 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
   return (
     <AppShell eyebrow="Class Cover" title="Profile" subtitle={profile.full_name} nav={teacherNav("profile")}>
       {saved && <Card tone="sunk"><p className="text-sm"><b>Saved.</b></p></Card>}
+      {contact?.whatsapp_connected_at ? (
+        <Card tone="sunk"><p className="text-sm"><b>WhatsApp connected.</b> Cover alerts come to your WhatsApp.</p></Card>
+      ) : (
+        contact?.whatsapp_opt_in && contact.whatsapp_link_code && <ConnectWhatsApp code={contact.whatsapp_link_code} />
+      )}
       <Link href="/account/password" className="flex items-center justify-between rounded-3xl border border-line bg-surface p-4">
         <span><span className="block font-semibold">Password</span><span className="block text-xs text-muted">Set one to sign in without waiting for an email</span></span>
         <span className="text-accent">→</span>
