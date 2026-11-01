@@ -14,8 +14,10 @@ async function call(path: string, init: { method?: string; body?: unknown; query
     body: init.body ? JSON.stringify(init.body) : undefined,
     cache: "no-store",
   });
-  const json = (await res.json().catch(() => ({}))) as { status?: string; data?: unknown; message?: string };
-  if (!res.ok || json.status === "error") throw new Error(`ManyChat ${path}: ${json.message ?? res.status}`);
+  const json = (await res.json().catch(() => ({}))) as { status?: string; data?: unknown; message?: string; details?: unknown };
+  if (!res.ok || json.status === "error") {
+    throw new Error(`ManyChat ${path}: ${json.message ?? res.status}${json.details ? ` ${JSON.stringify(json.details)}` : ""}`);
+  }
   return json.data;
 }
 
@@ -39,7 +41,14 @@ export async function ensureSubscriber(phone: string, fullName: string): Promise
   }
   const [first, ...rest] = fullName.trim().split(/\s+/);
   const created = (await call("/fb/subscriber/createSubscriber", {
-    body: { first_name: first, last_name: rest.join(" ") || undefined, whatsapp_phone: e164 },
+    body: {
+      first_name: first,
+      last_name: rest.join(" ") || undefined,
+      whatsapp_phone: e164,
+      has_opt_in_sms: false,
+      has_opt_in_email: false,
+      consent_phrase: "Opted in to Class Cover WhatsApp alerts when signing up",
+    },
   })) as { id: string | number };
   return String(created.id);
 }
