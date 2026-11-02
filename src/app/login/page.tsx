@@ -170,6 +170,7 @@ export default function LoginPage() {
             >
               {mode === "link" ? "Use a password instead" : "Forgot or never set a password?"}
             </button>
+            <a href="/privacy" className="justify-self-center text-xs text-muted underline">Privacy notice</a>
           </>
         )}
       </div>

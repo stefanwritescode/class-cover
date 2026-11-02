@@ -152,8 +152,9 @@ export default function SignupForm({
       <label className="flex items-start gap-3 text-sm" htmlFor="consent">
         <input id="consent" name="consent" type="checkbox" className="mt-1 accent-[var(--accent)]" />
         <span className="text-muted">
-          I agree that Class Cover stores my details to vet me and offer me cover, and shares them only as described above.
-          I can update or delete my details at any time. (Signed in as {email}.)
+          I agree that Class Cover stores my details to vet me and offer me cover, and shares them only as described above and in the{" "}
+          <a href="/privacy" target="_blank" className="font-semibold text-accent underline">privacy notice</a>. I can update or delete my
+          details at any time. (Signed in as {email}.)
         </span>
       </label>
 
