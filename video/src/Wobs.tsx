@@ -1,12 +1,13 @@
-export type Mood = "idle" | "cheer" | "calm" | "sleep" | "worry";
+export type Mood = "idle" | "cheer" | "calm" | "sleep" | "worry" | "blow";
 
 /** Wobs, drawn to match the app. squashX/squashY stretch him from the feet. */
-export const Wobs: React.FC<{ mood?: Mood; size?: number; squashX?: number; squashY?: number; rotate?: number }> = ({
+export const Wobs: React.FC<{ mood?: Mood; size?: number; squashX?: number; squashY?: number; rotate?: number; helmet?: boolean }> = ({
   mood = "idle",
   size = 400,
   squashX = 1,
   squashY = 1,
   rotate = 0,
+  helmet = false,
 }) => (
   <svg viewBox="40 40 180 150" width={size} height={size * (150 / 180)} style={{ overflow: "visible" }}>
     <ellipse cx="120" cy="180" rx={50 * squashX} ry="6" fill="#000" opacity="0.35" />
@@ -33,6 +34,15 @@ export const Wobs: React.FC<{ mood?: Mood; size?: number; squashX?: number; squa
           {mood === "calm" ? <path d="M112 147 q8 6 16 0" fill="none" stroke="#0A0620" strokeWidth="4" strokeLinecap="round" /> : <ellipse cx="120" cy="150" rx="5" ry="3" fill="#0A0620" />}
         </>
       )}
+      {mood === "blow" && (
+        <>
+          <path d="M94 126 l14 4" stroke="#0A0620" strokeWidth="5" strokeLinecap="round" />
+          <path d="M146 126 l-14 4" stroke="#0A0620" strokeWidth="5" strokeLinecap="round" />
+          <circle cx="120" cy="150" r="9" fill="#0A0620" />
+          <ellipse cx="84" cy="142" rx="14" ry="10" fill="#FF8CC8" />
+          <ellipse cx="156" cy="142" rx="14" ry="10" fill="#FF8CC8" />
+        </>
+      )}
       {mood === "worry" && (
         <>
           <ellipse cx="102" cy="130" rx="8" ry="10" fill="#0A0620" />
@@ -50,6 +60,14 @@ export const Wobs: React.FC<{ mood?: Mood; size?: number; squashX?: number; squa
           <circle cx="140" cy="125" r="2.5" fill="#fff" />
           <path d="M110 146 q10 8 20 0" fill="none" stroke="#0A0620" strokeWidth="4" strokeLinecap="round" />
         </>
+      )}
+      {helmet && (
+        <g>
+          <path d="M70 92 C72 48 168 48 170 92 Z" fill="#E8262B" />
+          <rect x="58" y="88" width="124" height="12" rx="6" fill="#B81D22" />
+          <path d="M120 50 L120 90" stroke="#B81D22" strokeWidth="5" />
+          <circle cx="120" cy="72" r="11" fill="#FFD23F" />
+        </g>
       )}
     </g>
   </svg>
