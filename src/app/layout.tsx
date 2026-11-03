@@ -9,6 +9,8 @@ const mono = JetBrains_Mono({ variable: "--font-mono-face", subsets: ["latin"], 
 export const metadata: Metadata = {
   title: "Class Cover",
   description: "Last-minute Pilates cover, filled in minutes.",
+  appleWebApp: { capable: true, title: "Class Cover", statusBarStyle: "default" },
+  icons: { apple: "/app-icon/apple-180" },
 };
 
 export const viewport: Viewport = {

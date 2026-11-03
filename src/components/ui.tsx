@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { InstallApp } from "./install-app";
 
 export function Card({ children, tone, className = "" }: { children: ReactNode; tone?: "urgent" | "sunk"; className?: string }) {
   const toneClass =
@@ -110,7 +111,10 @@ export function AppShell({
         {subtitle && <p className="relative mt-2 text-sm opacity-80">{subtitle}</p>}
         {headerExtra && <div className="relative mt-4">{headerExtra}</div>}
       </header>
-      <main className="grid flex-1 content-start gap-6 px-4 pb-32 pt-5">{children}</main>
+      <main className="grid flex-1 content-start gap-6 px-4 pb-32 pt-5">
+        <InstallApp />
+        {children}
+      </main>
       {nav && (
         <nav className="fixed inset-x-0 bottom-0 z-10 px-4" style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}>
           <div className="mx-auto flex max-w-md gap-1 rounded-full border border-line bg-surface/95 p-1.5 shadow-lg backdrop-blur">
@@ -154,5 +158,21 @@ export function ErrorNote({ message }: { message: string }) {
       <p className="text-sm font-semibold text-bad">Couldn&apos;t load this</p>
       <p className="text-xs text-muted">{message}</p>
     </Card>
+  );
+}
+
+/** Shown instantly while a screen loads, in the same shape as AppShell. */
+export function ShellSkeleton() {
+  return (
+    <div className="mx-auto flex min-h-dvh max-w-md flex-col" aria-busy="true" aria-label="Loading">
+      <div className="h-40 rounded-b-[2rem] bg-accent px-5 pt-5">
+        <div className="h-7 w-7 rounded-full bg-accent-ink/15" />
+        <div className="mt-6 h-8 w-40 animate-pulse rounded-xl bg-accent-ink/15" />
+        <div className="mt-3 h-4 w-56 animate-pulse rounded-lg bg-accent-ink/10" />
+      </div>
+      <div className="grid gap-3 px-4 pt-5">
+        {[0, 1, 2].map((i) => <div key={i} className="h-28 animate-pulse rounded-3xl border border-line bg-surface" />)}
+      </div>
+    </div>
   );
 }
