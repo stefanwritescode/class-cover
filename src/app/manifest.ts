@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Class Cover",
-    short_name: "Class Cover",
-    description: "Last-minute Pilates cover, filled in minutes.",
+    name: "Wobs",
+    short_name: "Wobs",
+    description: "When a class wobbles, Wobs steadies it. Last-minute Pilates cover, filled in minutes.",
     start_url: "/",
     scope: "/",
     display: "standalone",

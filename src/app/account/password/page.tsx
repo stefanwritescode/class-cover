@@ -28,7 +28,7 @@ export default function SetPasswordPage() {
   return (
     <main className="mx-auto grid min-h-dvh max-w-md content-center gap-6 px-5 py-10">
       <div className="grid gap-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted">Class Cover</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted">Wobs</p>
         <h1 className="text-3xl font-bold">{state === "done" ? "Password saved" : "Set a password"}</h1>
         <p className="text-muted">{state === "done" ? "Next time, sign in with your email and this password." : "Then you can sign in without waiting for an email."}</p>
       </div>

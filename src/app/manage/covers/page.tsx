@@ -75,10 +75,10 @@ export default async function CoversPage({ searchParams }: { searchParams: Promi
       subtitle={open.length ? `${open.length} class${open.length > 1 ? "es" : ""} still need${open.length > 1 ? "" : "s"} a teacher` : "Every posted class is covered"}
       nav={managerNav("covers", { open: open.length })}
       wobs={open.some((r) => r.urgent || new Date(r.starts_at).getTime() - now < URGENT_HOURS * 3600_000) ? "worry" : open.length ? "idle" : "nap"}
-      headerExtra={<Link href="/manage/post" className="inline-flex items-center gap-2 rounded-full bg-pink px-4 py-2 text-sm font-semibold text-white">{Icon.plus} Post a cover</Link>}
+      headerExtra={<Link href="/manage/post" className="inline-flex items-center gap-2 rounded-full bg-pink px-4 py-2 text-sm font-semibold text-white">{Icon.plus} Send Wobs</Link>}
     >
       {error && <ErrorNote message={error.message} />}
-      {posted && <Card tone="sunk"><p className="text-sm"><b>Posted.</b> Qualified teachers can see it now, and those who opted in get a WhatsApp.</p></Card>}
+      {posted && <Card tone="sunk"><p className="text-sm"><b>Wobs is on it.</b> Qualified teachers can see it now, and those who opted in get a WhatsApp.</p></Card>}
 
       {open.length > 0 && (
         <Section title="Needs cover" aside={`${open.length}`}>
@@ -179,7 +179,7 @@ export default async function CoversPage({ searchParams }: { searchParams: Promi
       {open.length + covered.length + toConfirm.length === 0 && (
         <Card tone="sunk">
           <p className="font-semibold">No covers right now</p>
-          <p className="text-sm text-muted">When a teacher calls in sick, tap Post a cover. Qualified teachers see it straight away.</p>
+          <p className="text-sm text-muted">When a teacher calls in sick, tap Send Wobs. Wobs finds a qualified teacher straight away.</p>
         </Card>
       )}
 

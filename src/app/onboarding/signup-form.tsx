@@ -143,7 +143,7 @@ export default function SignupForm({
         <label className="flex items-start gap-3 text-sm" htmlFor="v-verified">
           <input id="v-verified" type="radio" name="visibility" value="verified_studios" defaultChecked className="mt-1 accent-[var(--accent)]" />
           <span>
-            <b>Verified studios on Class Cover</b><br />
+            <b>Verified studios on Wobs</b><br />
             <span className="text-muted">They see your name, area and training. Never your phone, email, ID or bank details. Contact details are shared only if you accept a studio&apos;s request.</span>
           </span>
         </label>
@@ -152,7 +152,7 @@ export default function SignupForm({
       <label className="flex items-start gap-3 text-sm" htmlFor="consent">
         <input id="consent" name="consent" type="checkbox" className="mt-1 accent-[var(--accent)]" />
         <span className="text-muted">
-          I agree that Class Cover stores my details to vet me and offer me cover, and shares them only as described above and in the{" "}
+          I agree that Wobs stores my details to vet me and offer me cover, and shares them only as described above and in the{" "}
           <a href="/privacy" target="_blank" className="font-semibold text-accent underline">privacy notice</a>. I can update or delete my
           details at any time. (Signed in as {email}.)
         </span>

@@ -140,7 +140,7 @@ export default function PostForm({ locations, classes, days, defaultRate, headSt
       </Card>
 
       {past && <p className="text-sm text-bad">That class has already started. Pick a later class or time.</p>}
-      <Submit label={name && time ? `Post cover for ${name}, ${time}` : "Post cover"} />
+      <Submit label={name && time ? `Send Wobs for ${name}, ${time}` : "Send Wobs"} />
     </form>
   );
 }

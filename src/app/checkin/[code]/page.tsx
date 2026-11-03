@@ -24,7 +24,7 @@ export default async function CheckInPage({ params }: { params: Promise<{ code: 
           <p className="text-muted">{cls} · {fmtTime(new Date().toISOString())}. Have a great class.</p>
         </>
       )}
-      <Link href="/" className={buttonClass("ghost")}>Back to Class Cover</Link>
+      <Link href="/" className={buttonClass("ghost")}>Back to Wobs</Link>
     </main>
   );
 }

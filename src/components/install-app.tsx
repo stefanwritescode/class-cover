@@ -48,7 +48,7 @@ export function InstallApp() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/app-icon/192" alt="" className="h-10 w-10 flex-none rounded-2xl" />
       <div className="min-w-0 flex-1">
-        <p className="font-semibold">Add Class Cover to your home screen</p>
+        <p className="font-semibold">Add Wobs to your home screen</p>
         {ios ? (
           <p className="text-xs text-muted">In Safari, tap Share <span aria-hidden>⎋</span> then &ldquo;Add to Home Screen&rdquo;.</p>
         ) : (

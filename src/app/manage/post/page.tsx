@@ -17,7 +17,7 @@ export default async function PostPage() {
   const days = Array.from({ length: 14 }, (_, i) => saDate(i));
 
   return (
-    <AppShell eyebrow={studio.name} title="Post a cover" subtitle="Qualified teachers see it the moment you post." nav={managerNav("post")}>
+    <AppShell eyebrow={studio.name} title="Send Wobs" subtitle="Wobs finds a qualified teacher the moment you send." nav={managerNav("post")}>
       <PostForm
         locations={locations ?? []}
         classes={classes ?? []}

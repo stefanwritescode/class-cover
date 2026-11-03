@@ -15,7 +15,7 @@ export default async function OnboardingPage() {
   return (
     <main className="mx-auto grid max-w-md gap-6 px-4 pb-16 pt-8">
       <div className="grid gap-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted">Join Class Cover</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted">Join Wobs</p>
         <h1 className="text-3xl font-bold">Your teaching profile</h1>
         <p className="text-muted">Studios use this to check your training and contact you about cover.</p>
       </div>

@@ -1,4 +1,6 @@
-# Class Cover
+# Wobs (formerly Class Cover)
+
+Brand: **Wobs**, a wobbly pink mascot. Story: "When a class wobbles, Wobs steadies it." Managers "Send Wobs" to post a cover. Domain https://heywobs.com (Afrihost DNS, Vercel); wobs.co.za to redirect later. The repo, Vercel project and Supabase project keep the name class-cover.
 
 Last-minute cover app for Pilates studios, starting with Stretch Pilates (South Africa). A studio manager posts a cover, qualified teachers are pinged by push and WhatsApp, and the first to accept takes the class. Planned leave cover is out of scope (it lives in Talent OS).
 

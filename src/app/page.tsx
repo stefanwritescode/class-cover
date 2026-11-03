@@ -20,17 +20,17 @@ export default async function Home() {
         <p className="relative text-[11px] font-semibold uppercase tracking-widest text-cyan">Stretch Pilates</p>
         <div className="relative flex items-end gap-2">
           <div className="min-w-0 flex-1">
-            <h1 className="mt-3 text-5xl leading-[0.95]">Class<br />Cover</h1>
-            <p className="mt-4 max-w-xs text-white/85">Last-minute cover, filled in minutes.</p>
+            <h1 className="mt-3 text-6xl leading-[0.95]">Wobs</h1>
+            <p className="mt-4 max-w-xs text-white/85">When a class wobbles, Wobs steadies it.</p>
           </div>
           <Wobs mood="cheer" className="h-32 w-32 flex-none" />
         </div>
       </div>
       <ol className="grid gap-3 px-5">
         {[
-          ["A teacher calls in sick", "The studio posts the class in seconds."],
-          ["Qualified teachers get a WhatsApp", "Preferred cover first, then vetted locums."],
-          ["First to accept takes it", "The class is covered and the pay is tracked."],
+          ["A class wobbles", "A teacher calls in sick. The studio sends Wobs in seconds."],
+          ["Wobs knocks on WhatsApp", "Preferred teachers first, then vetted locums."],
+          ["First to take it steadies it", "The class is covered and the pay is tracked."],
         ].map(([title, body], i) => (
           <li key={title} className="flex gap-4">
             <span className="grid h-8 w-8 flex-none place-items-center rounded-full bg-accent-soft font-display text-sm font-bold text-accent">{i + 1}</span>

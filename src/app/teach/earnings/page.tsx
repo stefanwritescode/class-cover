@@ -23,7 +23,7 @@ export default async function EarningsPage() {
 
   return (
     <AppShell
-      eyebrow="Class Cover"
+      eyebrow="Wobs"
       title="Earnings"
       nav={teacherNav("earnings")}
       headerExtra={

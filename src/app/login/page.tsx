@@ -101,7 +101,7 @@ export default function LoginPage() {
         <CitySky part={partOfDayNow()} />
         <div className="relative flex items-end gap-2">
           <div className="min-w-0 flex-1 pb-2">
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-cyan">Class Cover</p>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-cyan">Wobs</p>
             <h1 className="mt-3 text-4xl leading-none">{mode === "signup" ? "Create account" : "Sign in"}</h1>
             <p className="mt-3 text-white/80">{mode === "signup" ? "Teachers: join to pick up cover at Stretch." : "Welcome back. Wobs missed you."}</p>
           </div>

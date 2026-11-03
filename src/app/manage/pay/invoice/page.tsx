@@ -23,7 +23,7 @@ export default async function InvoicePage({ searchParams }: { searchParams: Prom
 
         <header className="flex flex-wrap items-start justify-between gap-6 border-b-4 border-accent pb-6">
           <div>
-            <p className="font-display text-3xl font-bold">Class Cover</p>
+            <p className="font-display text-3xl font-bold">Wobs</p>
             <p className="text-sm text-muted">Cover statement and invoice</p>
           </div>
           <dl className="grid grid-cols-[auto_auto] gap-x-4 gap-y-1 text-sm">
@@ -40,8 +40,8 @@ export default async function InvoicePage({ searchParams }: { searchParams: Prom
             <tbody>
               <tr className="border-b border-line"><td className="py-2">Cover classes taught and confirmed</td><td className="py-2 text-right font-mono">{t.confirmed.length}</td></tr>
               <tr className="border-b border-line"><td className="py-2">Cover cost, paid by the studio directly to teachers</td><td className="py-2 text-right font-mono">{rand(t.teacherTotal)}</td></tr>
-              <tr className="border-b border-line"><td className="py-2">Class Cover platform fee <span className="text-muted">(free during launch)</span></td><td className="py-2 text-right font-mono">{rand(t.platformFee)}.00</td></tr>
-              <tr><td className="py-3 font-semibold">Amount due to Class Cover</td><td className="py-3 text-right font-mono text-lg font-semibold">{rand(t.platformFee)}.00</td></tr>
+              <tr className="border-b border-line"><td className="py-2">Wobs platform fee <span className="text-muted">(free during launch)</span></td><td className="py-2 text-right font-mono">{rand(t.platformFee)}.00</td></tr>
+              <tr><td className="py-3 font-semibold">Amount due to Wobs</td><td className="py-3 text-right font-mono text-lg font-semibold">{rand(t.platformFee)}.00</td></tr>
             </tbody>
           </table>
           {t.awaiting.length > 0 && <p className="text-xs text-muted">{t.awaiting.length} class{t.awaiting.length > 1 ? "es were" : " was"} not confirmed and {t.awaiting.length > 1 ? "are" : "is"} not included.</p>}
@@ -96,7 +96,7 @@ export default async function InvoicePage({ searchParams }: { searchParams: Prom
           </div>
         </section>
 
-        <p className="border-t border-line pt-4 text-xs text-muted">Teachers are paid by the studio. Class Cover records each cover and confirmation but does not handle teacher payments.</p>
+        <p className="border-t border-line pt-4 text-xs text-muted">Teachers are paid by the studio. Wobs records each cover and confirmation but does not handle teacher payments.</p>
       </div>
     </div>
   );

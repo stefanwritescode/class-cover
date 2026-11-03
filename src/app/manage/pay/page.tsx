@@ -101,7 +101,7 @@ export default async function PayPage({ searchParams }: { searchParams: Promise<
           );
         })}
       </Section>
-      <p className="px-1 text-xs text-muted">Class Cover is free during launch. Platform fee this month: {rand(t.platformFee)}.</p>
+      <p className="px-1 text-xs text-muted">Wobs is free during launch. Platform fee this month: {rand(t.platformFee)}.</p>
     </AppShell>
   );
 }

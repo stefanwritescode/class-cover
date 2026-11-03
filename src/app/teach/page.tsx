@@ -58,12 +58,12 @@ export default async function TeacherCovers({ searchParams }: { searchParams: Pr
 
   const mood = !approved ? "idle" : open.some(isSos) ? "worry" : open.length === 0 ? "nap" : "idle";
   const message =
-    msg === "dropped" ? "Class handed back. It's been re-posted to other teachers." :
+    msg === "dropped" ? "The class wobbled. Wobs is already finding someone new." :
     msg ? msg : null;
 
   return (
     <AppShell
-      eyebrow="Class Cover"
+      eyebrow="Wobs"
       title={`Hi ${profile.full_name.split(" ")[0]}`}
       subtitle={approved ? (open.length ? `${open.length} class${open.length > 1 ? "es" : ""} need${open.length > 1 ? "" : "s"} cover` : "No open covers right now") : "Here's where your application stands."}
       nav={teacherNav("covers", open.length)}
@@ -133,7 +133,7 @@ export default async function TeacherCovers({ searchParams }: { searchParams: Pr
                     <p>{r.cover_request_access.access_notes}</p>
                   </div>
                 )}
-                <p className="text-xs text-muted">When you arrive, scan the Class Cover QR code at reception to check in.</p>
+                <p className="text-xs text-muted">When you arrive, scan the Wobs QR code at reception to check in.</p>
                 <details className="border-t border-line pt-3">
                   <summary className="cursor-pointer text-sm font-semibold text-bad">Can&apos;t make it?</summary>
                   <div className="mt-2 grid gap-2">

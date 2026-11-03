@@ -29,7 +29,7 @@ export default async function PostersPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={p.qr} alt={`Check-in QR code for ${p.name}`} className="h-64 w-64" />
             <p className="text-lg font-semibold">{shortLocation(p.name)}</p>
-            <p className="text-sm text-muted">Class Cover · Stretch Pilates</p>
+            <p className="text-sm text-muted">Wobs · Stretch Pilates</p>
           </section>
         ))}
       </div>

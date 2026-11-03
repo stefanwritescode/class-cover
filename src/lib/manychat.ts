@@ -47,7 +47,7 @@ export async function ensureSubscriber(phone: string, fullName: string): Promise
       whatsapp_phone: e164,
       has_opt_in_sms: false,
       has_opt_in_email: false,
-      consent_phrase: "Opted in to Class Cover WhatsApp alerts when signing up",
+      consent_phrase: "Opted in to Wobs WhatsApp alerts when signing up",
     },
   })) as { id: string | number };
   return String(created.id);

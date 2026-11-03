@@ -4,7 +4,7 @@ import Link from "next/link";
 // Needs review by someone qualified in POPIA before real teachers sign up, including
 // each provider's data processing terms.
 
-export const metadata = { title: "Privacy notice · Class Cover" };
+export const metadata = { title: "Privacy notice · Wobs" };
 
 const UPDATED = "3 November 2026";
 
@@ -19,12 +19,12 @@ export default function PrivacyPage() {
         <b>Draft for review.</b> This notice hasn&apos;t been checked by a legal adviser yet.
       </p>
 
-      <p className="text-xs font-semibold uppercase tracking-widest text-muted">Class Cover</p>
+      <p className="text-xs font-semibold uppercase tracking-widest text-muted">Wobs</p>
       <h1 className="text-3xl font-bold">Privacy notice</h1>
       <p className="text-sm text-muted">Last updated {UPDATED}</p>
 
       <p>
-        Class Cover helps Pilates studios find cover teachers at short notice. This notice explains what personal information we
+        Wobs helps Pilates studios find cover teachers at short notice. This notice explains what personal information we
         collect about teachers and studio staff, why, who we share it with, and your rights under the Protection of Personal
         Information Act (POPIA).
       </p>
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
         <li>To alert you when a class you can teach needs cover, and to let you accept it.</li>
         <li>To give the teacher covering a class the details they need, such as access instructions.</li>
         <li>To record covers so studios can pay you correctly.</li>
-        <li>If you choose, to let other verified studios on Class Cover find you.</li>
+        <li>If you choose, to let other verified studios on Wobs find you.</li>
       </ul>
       <p>
         We rely on your consent, which you give when you create your profile, and on what&apos;s needed to arrange and pay for the
@@ -70,12 +70,12 @@ export default function PrivacyPage() {
           <b>Other verified studios</b> see only your name, area, training and the work you&apos;re open to, and only if you choose
           that in your profile. They never see your phone, email or bank details unless you accept their request.
         </li>
-        <li><b>Class Cover&apos;s administrators</b> can see your information to run and support the service.</li>
+        <li><b>Wobs&apos; administrators</b> can see your information to run and support the service.</li>
       </ul>
       <p>We don&apos;t sell your information or use it for advertising.</p>
 
       <H>Services we use</H>
-      <p>We use these providers to run Class Cover. Some store or process information outside South Africa:</p>
+      <p>We use these providers to run Wobs. Some store or process information outside South Africa:</p>
       <ul className="list-disc space-y-1 pl-5">
         <li><b>Supabase:</b> stores the app&apos;s data and handles sign-in. Data is held in London, United Kingdom.</li>
         <li><b>Vercel:</b> hosts the app. Requests may be processed in data centres outside South Africa.</li>
@@ -117,7 +117,7 @@ export default function PrivacyPage() {
       <H>Changes</H>
       <p>If we change this notice in a way that matters, we&apos;ll tell you in the app or by email before it takes effect.</p>
 
-      <Link href="/" className="mt-6 text-sm font-semibold text-accent">← Back to Class Cover</Link>
+      <Link href="/" className="mt-6 text-sm font-semibold text-accent">← Back to Wobs</Link>
     </main>
   );
 }

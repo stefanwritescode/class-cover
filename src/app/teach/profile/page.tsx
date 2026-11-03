@@ -36,7 +36,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
   ]);
 
   return (
-    <AppShell eyebrow="Class Cover" title="Profile" subtitle={profile.full_name} nav={teacherNav("profile")}>
+    <AppShell eyebrow="Wobs" title="Profile" subtitle={profile.full_name} nav={teacherNav("profile")}>
       {saved && <Card tone="sunk"><p className="text-sm"><b>Saved.</b></p></Card>}
       {contact?.whatsapp_connected_at ? (
         <Card tone="sunk"><p className="text-sm"><b>WhatsApp connected.</b> Cover alerts come to your WhatsApp.</p></Card>
@@ -131,7 +131,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
             </label>
             <label className="flex items-start gap-3 text-sm" htmlFor="v-verified">
               <input id="v-verified" type="radio" name="visibility" value="verified_studios" defaultChecked={profile.visibility === "verified_studios"} className="mt-1 accent-[var(--accent)]" />
-              <span><b>Verified studios on Class Cover</b><br /><span className="text-muted">Name, area and training only. Contact details are shared only if you accept a studio&apos;s request.</span></span>
+              <span><b>Verified studios on Wobs</b><br /><span className="text-muted">Name, area and training only. Contact details are shared only if you accept a studio&apos;s request.</span></span>
             </label>
           </Card>
           <button className={buttonClass()}>Save details</button>
