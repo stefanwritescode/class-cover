@@ -24,7 +24,7 @@ export default function LoginPage() {
   const [linkError, setLinkError] = useState("");
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("error") === "link")
-      setLinkError("That sign-in link had expired or was already used. Email links work once, and only the newest one works. Some work email systems open links to scan them, which uses them up, so use the 6-digit code from the email instead.");
+      setLinkError("That sign-in link had expired or was already used. Email links work once, and only the newest one works. Some work email systems open links to scan them, which uses them up, so use the code from the email instead.");
   }, []);
   // After "forgot password", land on the page to set a new one.
   const afterLink = () => (mode === "link" ? "/account/password" : nextPath());
@@ -119,8 +119,8 @@ export default function LoginPage() {
                   aria-label="Code from the email"
                   inputMode="numeric"
                   autoComplete="one-time-code"
-                  placeholder="6-digit code"
-                  className={`${inputClass} text-center font-mono text-xl tracking-[0.4em]`}
+                  placeholder="Code from the email"
+                  className={`${inputClass} text-center font-mono text-xl tracking-[0.25em]`}
                   value={code}
                   onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 10))}
                 />
