@@ -29,9 +29,23 @@ export async function getViewer() {
   return { supabase, user, profile, managed };
 }
 
+/** A manager limited to some locations sees those locations' name; the database does the actual limiting. */
 export async function requireManager() {
   const viewer = await getViewer();
   if (!viewer.user) redirect("/login");
   if (!viewer.managed.length) redirect("/");
-  return { ...viewer, studio: viewer.managed[0] };
+  const { data: row } = await viewer.supabase
+    .from("studio_managers")
+    .select("location_ids")
+    .eq("profile_id", viewer.user.id)
+    .eq("studio_id", viewer.managed[0].id)
+    .single();
+  const locationIds: string[] = row?.location_ids ?? [];
+  const wholeStudio = locationIds.length === 0;
+  let name = viewer.managed[0].name;
+  if (!wholeStudio) {
+    const { data: locs } = await viewer.supabase.from("locations").select("name").in("id", locationIds).order("name");
+    if (locs?.length) name = locs.map((l) => l.name).join(", ");
+  }
+  return { ...viewer, studio: { id: viewer.managed[0].id, name }, wholeStudio };
 }

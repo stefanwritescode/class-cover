@@ -21,12 +21,22 @@ function NumberRow({ id, label, hint, unit, value, min, max, step = 1 }: { id: s
 }
 
 export default async function SettingsPage() {
-  const { supabase, studio } = await requireManager();
+  const { supabase, studio, wholeStudio } = await requireManager();
   const { data: s } = await supabase.from("studios").select("*").eq("id", studio.id).single();
 
   return (
     <AppShell eyebrow={studio.name} title="Settings" subtitle="How cover works at your studio" nav={managerNav("settings")}>
-      <form action={saveSettings} className="grid gap-4">
+      {!wholeStudio && (
+        <Card tone="sunk">
+          <p className="text-sm text-muted">
+            Rates, the preferred head start and vetting rules are set for all of {s?.name ?? "the studio"}. Ask the studio owner to change them.
+          </p>
+          <p className="font-mono text-sm">
+            R{s?.default_rate} default rate · {s?.wave_delay_minutes} min head start · {s?.meet_first ? "meet first" : "approve on training"}
+          </p>
+        </Card>
+      )}
+      {wholeStudio && <form action={saveSettings} className="grid gap-4">
         <Card>
           <p className="font-display text-lg font-semibold">Vetting</p>
           <label className="flex items-start justify-between gap-4" htmlFor="meet_first">
@@ -46,7 +56,7 @@ export default async function SettingsPage() {
           <NumberRow id="dropout_limit" label="Dropout limit" hint="Late dropouts a quarter before preferred moves to locum." unit="per qtr" value={s?.dropout_limit} min={1} max={20} />
         </Card>
         <button className={buttonClass()}>Save settings</button>
-      </form>
+      </form>}
       <div className="grid grid-cols-2 gap-3">
         <Link href="/manage/timetable" className="grid gap-1 rounded-3xl border border-line bg-surface p-4">
           <span className="font-semibold">Timetable</span>
