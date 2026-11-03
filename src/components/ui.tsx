@@ -14,7 +14,7 @@ const CARD: Record<CardTone, string> = {
 };
 export function Card({ children, tone, className = "" }: { children: ReactNode; tone?: CardTone; className?: string }) {
   const toneClass = tone ? CARD[tone] : "border-line bg-surface shadow-[0_1px_0_var(--line)]";
-  return <div className={`relative grid gap-3 rounded-3xl border-[1.5px] p-4 ${toneClass} ${className}`}>{children}</div>;
+  return <div className={`relative grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3 rounded-3xl border-[1.5px] p-4 ${toneClass} ${className}`}>{children}</div>;
 }
 
 /** A tilted sticker, e.g. "SOS!" on a cover that starts soon. */
@@ -57,7 +57,7 @@ export function buttonClass(variant: keyof typeof BTN = "primary", small = false
 
 export function Section({ title, aside, children }: { title: string; aside?: ReactNode; children: ReactNode }) {
   return (
-    <section className="grid gap-3">
+    <section className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3">
       <div className="flex items-baseline justify-between px-1">
         <h2 className="font-display text-lg font-semibold">{title}</h2>
         {aside && <span className="text-xs text-muted">{aside}</span>}
@@ -115,7 +115,7 @@ export function AppShell({
   children: ReactNode;
 }) {
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col">
+    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col">
       <header className="relative overflow-hidden rounded-b-[2rem] bg-night px-5 pb-5 pt-5 text-white">
         <CitySky part={partOfDayNow()} />
         <div className="relative flex items-center justify-between">
@@ -134,7 +134,7 @@ export function AppShell({
         </div>
         {headerExtra && <div className="relative mt-4">{headerExtra}</div>}
       </header>
-      <main className="grid flex-1 content-start gap-6 px-4 pb-32 pt-5">
+      <main className="grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)] content-start gap-6 px-4 pb-32 pt-5">
         <InstallApp />
         {children}
       </main>

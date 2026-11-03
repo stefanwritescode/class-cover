@@ -53,7 +53,10 @@
   --font-mono: var(--font-mono-face);
 }
 
+/* Nothing may push the page wider than the phone: long words wrap instead of stretching a card. */
+html, body { overflow-x: clip; }
 body {
+  overflow-wrap: anywhere;
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body), system-ui, sans-serif;
