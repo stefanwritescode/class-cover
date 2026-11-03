@@ -14,10 +14,11 @@ async function teacher() {
 
 export async function acceptCover(formData: FormData) {
   const { supabase } = await teacher();
-  const { error } = await supabase.rpc("accept_cover", { p_request: String(formData.get("request_id")) });
+  const requestId = String(formData.get("request_id"));
+  const { error } = await supabase.rpc("accept_cover", { p_request: requestId });
   if (error) redirect(`/teach?msg=${encodeURIComponent(error.message)}`);
   revalidatePath("/teach");
-  redirect("/teach?msg=accepted");
+  redirect(`/teach/got-it/${requestId}`);
 }
 
 export async function dropCover(formData: FormData) {

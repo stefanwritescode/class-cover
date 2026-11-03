@@ -29,8 +29,8 @@ export default async function PayPage({ searchParams }: { searchParams: Promise<
       headerExtra={
         <div className="grid gap-3">
           <div className="flex items-center gap-2">
-            <Link href={`/manage/pay?month=${shiftMonth(month, -1)}`} className="rounded-full bg-accent-ink/10 px-3 py-1 text-xs font-semibold">← {monthLabel(shiftMonth(month, -1)).split(" ")[0]}</Link>
-            <Link href={`/manage/pay?month=${shiftMonth(month, 1)}`} className="rounded-full bg-accent-ink/10 px-3 py-1 text-xs font-semibold">{monthLabel(shiftMonth(month, 1)).split(" ")[0]} →</Link>
+            <Link href={`/manage/pay?month=${shiftMonth(month, -1)}`} className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold">← {monthLabel(shiftMonth(month, -1)).split(" ")[0]}</Link>
+            <Link href={`/manage/pay?month=${shiftMonth(month, 1)}`} className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold">{monthLabel(shiftMonth(month, 1)).split(" ")[0]} →</Link>
           </div>
           <div className="grid grid-cols-3 gap-1.5">
             {[
@@ -38,7 +38,7 @@ export default async function PayPage({ searchParams }: { searchParams: Promise<
               [String(t.confirmed.length), "Classes"],
               [String(t.awaiting.length), "To confirm"],
             ].map(([v, l]) => (
-              <div key={l} className="rounded-2xl bg-accent-ink/10 px-2 py-2 text-center">
+              <div key={l} className="rounded-2xl bg-white/10 px-2 py-2 text-center">
                 <div className="font-display text-xl font-bold leading-none">{v}</div>
                 <div className="mt-1 text-[10px] font-semibold uppercase tracking-wide opacity-80">{l}</div>
               </div>

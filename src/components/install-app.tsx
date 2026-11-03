@@ -45,7 +45,8 @@ export function InstallApp() {
 
   return (
     <div className="flex items-center gap-3 rounded-3xl border border-line bg-surface p-4">
-      <span className="grid h-10 w-10 flex-none place-items-center rounded-2xl bg-accent font-display text-sm font-bold text-accent-ink">CC</span>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/app-icon/192" alt="" className="h-10 w-10 flex-none rounded-2xl" />
       <div className="min-w-0 flex-1">
         <p className="font-semibold">Add Class Cover to your home screen</p>
         {ios ? (

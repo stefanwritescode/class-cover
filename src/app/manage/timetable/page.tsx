@@ -37,7 +37,7 @@ export default async function TimetablePage({ searchParams }: { searchParams: Pr
             <Link
               key={l.id}
               href={href(l.id)}
-              className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-semibold ${l.id === current?.id ? "bg-accent-ink text-accent" : "bg-accent-ink/10"}`}
+              className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-semibold ${l.id === current?.id ? "bg-white text-night" : "bg-white/10"}`}
             >
               {short(l.name)}
             </Link>

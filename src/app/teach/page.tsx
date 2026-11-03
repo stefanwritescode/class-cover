@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getViewer, STAGE_LABEL, type Stage } from "@/lib/session";
-import { AppShell, buttonClass, Card, Icon, Pill, Section } from "@/components/ui";
-import { fmtDay, fmtTime, rand, saDate, shortLocation, startsIn } from "@/lib/format";
+import { AppShell, buttonClass, Card, Icon, Pill, Section, Sticker } from "@/components/ui";
+import { daypart, fmtDay, fmtTime, rand, saDate, shortLocation, startsIn, URGENT_HOURS } from "@/lib/format";
 import { ConnectWhatsApp } from "@/components/connect-whatsapp";
 import { teacherNav } from "./nav";
 import { acceptCover, dropCover } from "./actions";
+
+const PART_LABEL = { morning: "Sunrise", midday: "Midday", evening: "Night" } as const;
+const isSos = (r: { urgent: boolean; starts_at: string }) => r.urgent || new Date(r.starts_at).getTime() - Date.now() < URGENT_HOURS * 3600_000;
 
 const STEPS = ["Applied", "Met", "Training checked", "Approved"];
 const REACHED: Record<Stage, number> = { to_meet: 1, checking_documents: 2, locum: 4, preferred: 4, declined: 0 };
@@ -53,8 +56,8 @@ export default async function TeacherCovers({ searchParams }: { searchParams: Pr
     profile.insurance_expiry && profile.insurance_expiry < today ? "insurance" : null,
   ].filter(Boolean);
 
+  const mood = !approved ? "idle" : open.some(isSos) ? "worry" : open.length === 0 ? "nap" : "idle";
   const message =
-    msg === "accepted" ? "You're on. The class is in your upcoming covers below." :
     msg === "dropped" ? "Class handed back. It's been re-posted to other teachers." :
     msg ? msg : null;
 
@@ -64,6 +67,7 @@ export default async function TeacherCovers({ searchParams }: { searchParams: Pr
       title={`Hi ${profile.full_name.split(" ")[0]}`}
       subtitle={approved ? (open.length ? `${open.length} class${open.length > 1 ? "es" : ""} need${open.length > 1 ? "" : "s"} cover` : "No open covers right now") : "Here's where your application stands."}
       nav={teacherNav("covers", open.length)}
+      wobs={mood}
     >
       {message && <Card tone="sunk"><p className="text-sm">{message}</p></Card>}
       {contact?.whatsapp_opt_in && !contact.whatsapp_connected_at && contact.whatsapp_link_code && <ConnectWhatsApp code={contact.whatsapp_link_code} />}
@@ -79,8 +83,11 @@ export default async function TeacherCovers({ searchParams }: { searchParams: Pr
           {open.length === 0 && (
             <Card tone="sunk"><p className="text-sm text-muted">When a class you&apos;re trained for needs cover, it shows up here and you get a WhatsApp.</p></Card>
           )}
-          {open.map((r) => (
-            <Card key={r.id} tone="urgent">
+          {open.map((r) => {
+            const part = daypart(fmtTime(r.starts_at));
+            return (
+            <Card key={r.id} tone={isSos(r) ? "sos" : part}>
+              {isSos(r) && <Sticker>SOS!</Sticker>}
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="font-display text-lg font-semibold leading-tight">{r.class_name}</p>
@@ -89,17 +96,19 @@ export default async function TeacherCovers({ searchParams }: { searchParams: Pr
                 <span className="font-mono text-lg">{rand(r.rate)}</span>
               </div>
               <div className="flex flex-wrap gap-2">
-                <Pill tone="accent"><span className="inline-flex items-center gap-1">{Icon.pin}{shortLocation(r.locations?.name ?? "")}</span></Pill>
+                <Pill tone={part}>{PART_LABEL[part]}</Pill>
+                <Pill tone="info"><span className="inline-flex items-center gap-1">{Icon.pin}{shortLocation(r.locations?.name ?? "")}</span></Pill>
                 {r.urgent && <Pill tone="bad"><span className="inline-flex items-center gap-1">{Icon.bolt}Urgent</span></Pill>}
                 {startsIn(r.starts_at) && <Pill tone="urgent"><span className="inline-flex items-center gap-1">{Icon.clock}Starts {startsIn(r.starts_at)}</span></Pill>}
               </div>
               {r.notes && <p className="rounded-2xl bg-sunk px-3 py-2 text-sm">{r.notes}</p>}
               <form action={acceptCover}>
                 <input type="hidden" name="request_id" value={r.id} />
-                <button className={`${buttonClass()} w-full`}>Accept cover · {rand(r.rate)}</button>
+                <button className={`${buttonClass()} w-full`}>Take it · {rand(r.rate)}</button>
               </form>
             </Card>
-          ))}
+            );
+          })}
         </Section>
       )}
 

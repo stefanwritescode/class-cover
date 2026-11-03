@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { CitySky, partOfDayNow, Wobs } from "@/components/wobs";
 import { createClient } from "@/lib/supabase/client";
 import { buttonClass, Field, inputClass } from "@/components/ui";
 
@@ -96,13 +97,16 @@ export default function LoginPage() {
 
   return (
     <main className="mx-auto grid min-h-dvh max-w-md content-start gap-6 pb-10">
-      <div className="relative overflow-hidden rounded-b-[2rem] bg-accent px-5 pb-8 pt-16 text-accent-ink">
-        <svg aria-hidden viewBox="0 0 200 200" className="pointer-events-none absolute -right-20 -top-10 h-72 w-72 opacity-15">
-          {[30, 50, 70, 90].map((r) => <circle key={r} cx="100" cy="100" r={r} fill="none" stroke="currentColor" strokeWidth="6" />)}
-        </svg>
-        <p className="relative text-xs font-semibold uppercase tracking-widest opacity-80">Class Cover</p>
-        <h1 className="relative mt-3 text-4xl font-bold leading-none">{mode === "signup" ? "Create account" : "Sign in"}</h1>
-        <p className="relative mt-3 opacity-80">{mode === "signup" ? "Teachers: join to pick up cover at Stretch." : "Welcome back."}</p>
+      <div className="relative overflow-hidden rounded-b-[2rem] bg-night px-5 pb-6 pt-12 text-white">
+        <CitySky part={partOfDayNow()} />
+        <div className="relative flex items-end gap-2">
+          <div className="min-w-0 flex-1 pb-2">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-cyan">Class Cover</p>
+            <h1 className="mt-3 text-4xl leading-none">{mode === "signup" ? "Create account" : "Sign in"}</h1>
+            <p className="mt-3 text-white/80">{mode === "signup" ? "Teachers: join to pick up cover at Stretch." : "Welcome back. Wobs missed you."}</p>
+          </div>
+          <Wobs className="h-24 w-24 flex-none" />
+        </div>
       </div>
 
       <div className="grid gap-5 px-4">

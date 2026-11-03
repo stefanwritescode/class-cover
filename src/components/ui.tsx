@@ -1,16 +1,36 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { InstallApp } from "./install-app";
+import { CitySky, partOfDayNow, Wobs, wobsLine, type WobsMood } from "./wobs";
 
-export function Card({ children, tone, className = "" }: { children: ReactNode; tone?: "urgent" | "sunk"; className?: string }) {
-  const toneClass =
-    tone === "urgent" ? "border-urgent bg-surface ring-4 ring-urgent-soft" : tone === "sunk" ? "border-line bg-sunk" : "border-line bg-surface shadow-[0_1px_0_var(--line)]";
-  return <div className={`grid gap-3 rounded-3xl border p-4 ${toneClass} ${className}`}>{children}</div>;
+type CardTone = "urgent" | "sunk" | "sos" | "morning" | "midday" | "evening";
+const CARD: Record<CardTone, string> = {
+  urgent: "border-urgent bg-surface ring-4 ring-urgent-soft",
+  sunk: "border-line bg-sunk",
+  sos: "border-pink bg-surface ring-4 ring-accent-soft",
+  morning: "border-morning bg-surface",
+  midday: "border-midday bg-surface",
+  evening: "border-evening bg-surface",
+};
+export function Card({ children, tone, className = "" }: { children: ReactNode; tone?: CardTone; className?: string }) {
+  const toneClass = tone ? CARD[tone] : "border-line bg-surface shadow-[0_1px_0_var(--line)]";
+  return <div className={`relative grid gap-3 rounded-3xl border-[1.5px] p-4 ${toneClass} ${className}`}>{children}</div>;
 }
 
-type PillTone = "accent" | "urgent" | "good" | "bad" | "muted";
+/** A tilted sticker, e.g. "SOS!" on a cover that starts soon. */
+export function Sticker({ children }: { children: ReactNode }) {
+  return (
+    <span className="absolute -top-2.5 right-4 rotate-[8deg] rounded-md bg-pink px-2 py-0.5 font-display text-xs text-white shadow-sm">{children}</span>
+  );
+}
+
+type PillTone = "accent" | "urgent" | "good" | "bad" | "muted" | "info" | "morning" | "midday" | "evening";
 const PILL: Record<PillTone, string> = {
   accent: "bg-accent-soft text-accent",
+  info: "bg-info-soft text-info",
+  morning: "bg-morning-soft text-ink",
+  midday: "bg-midday-soft text-ink",
+  evening: "bg-evening-soft text-ink",
   urgent: "bg-urgent-soft text-ink",
   good: "bg-good-soft text-good",
   bad: "bg-bad-soft text-bad",
@@ -75,13 +95,14 @@ export const Icon = {
 
 export type NavItem = { href: string; label: string; active: boolean; icon: ReactNode; badge?: number };
 
-/** Phone-style app frame: a coloured header band, scrolling content, and icon tabs. */
+/** Phone-style app frame: a night-city header with Wobs, scrolling content, and icon tabs. */
 export function AppShell({
   eyebrow,
   title,
   subtitle,
   nav,
   headerExtra,
+  wobs = "idle",
   children,
 }: {
   eyebrow: string;
@@ -89,26 +110,28 @@ export function AppShell({
   subtitle?: string;
   nav?: NavItem[];
   headerExtra?: ReactNode;
+  /** Wobs' mood in the header. */
+  wobs?: WobsMood;
   children: ReactNode;
 }) {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col">
-      <header className="relative overflow-hidden rounded-b-[2rem] bg-accent px-5 pb-6 pt-5 text-accent-ink">
-        {/* Reformer-spring motif: concentric arcs, purely decorative */}
-        <svg aria-hidden viewBox="0 0 200 200" className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 opacity-15">
-          {[30, 50, 70, 90].map((r) => <circle key={r} cx="100" cy="100" r={r} fill="none" stroke="currentColor" strokeWidth="6" />)}
-        </svg>
+      <header className="relative overflow-hidden rounded-b-[2rem] bg-night px-5 pb-5 pt-5 text-white">
+        <CitySky part={partOfDayNow()} />
         <div className="relative flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="grid h-7 w-7 place-items-center rounded-full bg-accent-ink/15 font-display text-xs font-bold">CC</span>
-            <span className="text-xs font-semibold opacity-80">{eyebrow}</span>
-          </div>
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-cyan">{eyebrow}</span>
           <form action="/auth/signout" method="post">
-            <button className="rounded-full bg-accent-ink/10 px-3 py-1 text-xs font-semibold">Sign out</button>
+            <button className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold">Sign out</button>
           </form>
         </div>
-        <h1 className="relative mt-5 text-[2rem] font-bold leading-none">{title}</h1>
-        {subtitle && <p className="relative mt-2 text-sm opacity-80">{subtitle}</p>}
+        <div className="relative mt-3 flex items-end gap-2">
+          <div className="min-w-0 flex-1 pb-1">
+            <h1 className="text-[2rem] leading-none">{title}</h1>
+            {subtitle && <p className="mt-2 text-sm text-white/80">{subtitle}</p>}
+            <p className="relative mt-3 inline-block rounded-2xl rounded-br-sm bg-white px-3 py-1.5 text-[13px] font-semibold text-[#1A1240]">{wobsLine(wobs)}</p>
+          </div>
+          <Wobs mood={wobs} className="h-24 w-24 flex-none" />
+        </div>
         {headerExtra && <div className="relative mt-4">{headerExtra}</div>}
       </header>
       <main className="grid flex-1 content-start gap-6 px-4 pb-32 pt-5">
@@ -165,10 +188,10 @@ export function ErrorNote({ message }: { message: string }) {
 export function ShellSkeleton() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col" aria-busy="true" aria-label="Loading">
-      <div className="h-40 rounded-b-[2rem] bg-accent px-5 pt-5">
-        <div className="h-7 w-7 rounded-full bg-accent-ink/15" />
-        <div className="mt-6 h-8 w-40 animate-pulse rounded-xl bg-accent-ink/15" />
-        <div className="mt-3 h-4 w-56 animate-pulse rounded-lg bg-accent-ink/10" />
+      <div className="h-44 rounded-b-[2rem] bg-night px-5 pt-5">
+        <div className="h-3 w-24 rounded bg-white/15" />
+        <div className="mt-6 h-8 w-40 animate-pulse rounded-xl bg-white/15" />
+        <div className="mt-3 h-4 w-56 animate-pulse rounded-lg bg-white/10" />
       </div>
       <div className="grid gap-3 px-4 pt-5">
         {[0, 1, 2].map((i) => <div key={i} className="h-28 animate-pulse rounded-3xl border border-line bg-surface" />)}

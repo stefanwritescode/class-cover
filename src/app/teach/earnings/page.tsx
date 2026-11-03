@@ -29,7 +29,7 @@ export default async function EarningsPage() {
       headerExtra={
         <div className="grid grid-cols-2 gap-1.5">
           {[[rand(owed), "To be paid"], [rand(paid), "Paid so far"]].map(([v, l]) => (
-            <div key={l} className="rounded-2xl bg-accent-ink/10 px-3 py-2">
+            <div key={l} className="rounded-2xl bg-white/10 px-3 py-2">
               <div className="font-display text-2xl font-bold leading-none">{v}</div>
               <div className="mt-1 text-[10px] font-semibold uppercase tracking-wide opacity-80">{l}</div>
             </div>

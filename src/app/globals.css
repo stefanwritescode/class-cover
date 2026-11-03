@@ -1,16 +1,21 @@
 @import "tailwindcss";
 
-/* Brand tokens carried over from the prototype (docs/prototype.html). */
+/* Brand tokens: neon on soft lavender (light) or deep indigo (dark). The header is always night-city dark. */
 :root {
-  --bg: #E9EDE6; --surface: #FFFFFF; --sunk: #F3F6F1; --ink: #18221E; --muted: #5B6964; --line: #D5DCD4;
-  --accent: #1E5A4B; --accent-ink: #FFFFFF; --accent-soft: #DCEBE4;
-  --urgent: #E9A23B; --urgent-soft: #FBEBD1; --good: #2C7A4C; --good-soft: #DDF0E3; --bad: #A9433B; --bad-soft: #F6E0DD;
+  --bg: #EFEAFF; --surface: #FFFFFF; --sunk: #F6F3FF; --ink: #1A1240; --muted: #6B6191; --line: #DDD5F5;
+  --accent: #E0157F; --accent-ink: #FFFFFF; --accent-soft: #FFE0F0;
+  --urgent: #E68A00; --urgent-soft: #FFF1D1; --good: #3B7A00; --good-soft: #E9FFC2; --bad: #D61F55; --bad-soft: #FFE0E8;
+  --info: #0089B0; --info-soft: #DDF9FF;
+  --morning: #FF9A1F; --morning-soft: #FFF1D1; --midday: #00A8D6; --midday-soft: #DDF9FF; --evening: #7A3DFF; --evening-soft: #EDE3FF;
+  --lime: #C6FF3D; --cyan: #33F0FF; --pink: #FF3EA5; --night: #120A33;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #101614; --surface: #19221F; --sunk: #141C19; --ink: #E6ECE8; --muted: #97A59F; --line: #2A3631;
-    --accent: #72C3A9; --accent-ink: #0C1A15; --accent-soft: #1F3830;
-    --urgent: #F0B55A; --urgent-soft: #3A2D17; --good: #6CC98F; --good-soft: #1B3325; --bad: #E58A80; --bad-soft: #3A1F1C;
+    --bg: #0A0620; --surface: #160F3A; --sunk: #110A2E; --ink: #F4F0FF; --muted: #A99BD9; --line: #2E2252;
+    --accent: #FF3EA5; --accent-ink: #FFFFFF; --accent-soft: #3A1030;
+    --urgent: #FFC94D; --urgent-soft: #3A2600; --good: #C6FF3D; --good-soft: #24300A; --bad: #FF6F9A; --bad-soft: #3A0F1E;
+    --info: #33F0FF; --info-soft: #0B2A3A;
+    --morning: #FFB020; --morning-soft: #3A2600; --midday: #33F0FF; --midday-soft: #0B2A3A; --evening: #A57BFF; --evening-soft: #2A0F55;
     color-scheme: dark;
   }
 }
@@ -31,6 +36,18 @@
   --color-good-soft: var(--good-soft);
   --color-bad: var(--bad);
   --color-bad-soft: var(--bad-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-morning: var(--morning);
+  --color-morning-soft: var(--morning-soft);
+  --color-midday: var(--midday);
+  --color-midday-soft: var(--midday-soft);
+  --color-evening: var(--evening);
+  --color-evening-soft: var(--evening-soft);
+  --color-lime: var(--lime);
+  --color-cyan: var(--cyan);
+  --color-pink: var(--pink);
+  --color-night: var(--night);
   --font-display: var(--font-display);
   --font-sans: var(--font-body);
   --font-mono: var(--font-mono-face);
@@ -41,4 +58,21 @@ body {
   color: var(--ink);
   font-family: var(--font-body), system-ui, sans-serif;
 }
-h1, h2, h3 { font-family: var(--font-display), system-ui, sans-serif; text-wrap: balance; }
+/* Dela Gothic One has a single weight; never fake-bold it. */
+h1, h2, h3, .font-display { font-family: var(--font-display), system-ui, sans-serif; font-weight: 400 !important; font-synthesis: none; text-wrap: balance; letter-spacing: -0.01em; }
+
+/* Wobs, the mascot: squash-and-stretch from the feet. */
+.wobs-body { transform-origin: 50% 100%; transform-box: fill-box; }
+.wobs-idle .wobs-body { animation: wobs-wobble 2.4s ease-in-out infinite; }
+.wobs-cheer .wobs-body { animation: wobs-hop 0.7s ease-in-out infinite; }
+.wobs-worry .wobs-body { animation: wobs-shake 0.35s ease-in-out infinite; }
+.wobs-nap .wobs-body { animation: wobs-breathe 3.2s ease-in-out infinite; }
+@keyframes wobs-wobble { 0%, 100% { transform: scale(1, 1); } 25% { transform: scale(1.06, 0.94) rotate(-2deg); } 50% { transform: scale(0.96, 1.05); } 75% { transform: scale(1.04, 0.96) rotate(2deg); } }
+@keyframes wobs-hop { 0%, 100% { transform: translateY(0) scale(1.08, 0.9); } 40%, 60% { transform: translateY(-14%) scale(0.95, 1.06); } }
+@keyframes wobs-shake { 0%, 100% { transform: rotate(-3deg) scale(1.02, 0.98); } 50% { transform: rotate(3deg) scale(0.98, 1.02); } }
+@keyframes wobs-breathe { 0%, 100% { transform: scale(1.04, 0.94); } 50% { transform: scale(1.08, 0.9); } }
+@keyframes confetti-fall { 0% { transform: translateY(-20px) rotate(0); opacity: 1; } 100% { transform: translateY(70vh) rotate(540deg); opacity: 0; } }
+.confetti { position: absolute; top: 0; width: 8px; height: 14px; border-radius: 2px; animation: confetti-fall 2.6s ease-in forwards; }
+@media (prefers-reduced-motion: reduce) {
+  .wobs-body, .confetti { animation: none !important; }
+}

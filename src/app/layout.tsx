@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Figtree, JetBrains_Mono } from "next/font/google";
+import { Dela_Gothic_One, Figtree, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const display = Bricolage_Grotesque({ variable: "--font-display", subsets: ["latin"], weight: ["600", "700"] });
+const display = Dela_Gothic_One({ variable: "--font-display", subsets: ["latin"], weight: "400" });
 const body = Figtree({ variable: "--font-body", subsets: ["latin"], weight: ["400", "500", "600"] });
 const mono = JetBrains_Mono({ variable: "--font-mono-face", subsets: ["latin"], weight: ["500"] });
 
@@ -18,8 +18,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#E9EDE6" },
-    { media: "(prefers-color-scheme: dark)", color: "#101614" },
+    { media: "(prefers-color-scheme: light)", color: "#120A33" },
+    { media: "(prefers-color-scheme: dark)", color: "#120A33" },
   ],
 };
 

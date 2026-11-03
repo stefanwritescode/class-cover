@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requireManager } from "@/lib/session";
-import { AppShell, Avatar, buttonClass, Card, ErrorNote, Icon, Pill, Section } from "@/components/ui";
-import { fmtDay, fmtTime, rand, shortLocation, startsIn } from "@/lib/format";
+import { AppShell, Avatar, buttonClass, Card, ErrorNote, Icon, Pill, Section, Sticker } from "@/components/ui";
+import { fmtDay, fmtTime, rand, shortLocation, startsIn, URGENT_HOURS } from "@/lib/format";
 import { managerNav } from "../nav";
 import { cancelCover, confirmCover, openToEveryone } from "../actions";
 
@@ -74,7 +74,8 @@ export default async function CoversPage({ searchParams }: { searchParams: Promi
       title="Covers"
       subtitle={open.length ? `${open.length} class${open.length > 1 ? "es" : ""} still need${open.length > 1 ? "" : "s"} a teacher` : "Every posted class is covered"}
       nav={managerNav("covers", { open: open.length })}
-      headerExtra={<Link href="/manage/post" className="inline-flex items-center gap-2 rounded-full bg-accent-ink px-4 py-2 text-sm font-semibold text-accent">{Icon.plus} Post a cover</Link>}
+      wobs={open.some((r) => r.urgent || new Date(r.starts_at).getTime() - now < URGENT_HOURS * 3600_000) ? "worry" : open.length ? "idle" : "nap"}
+      headerExtra={<Link href="/manage/post" className="inline-flex items-center gap-2 rounded-full bg-pink px-4 py-2 text-sm font-semibold text-white">{Icon.plus} Post a cover</Link>}
     >
       {error && <ErrorNote message={error.message} />}
       {posted && <Card tone="sunk"><p className="text-sm"><b>Posted.</b> Qualified teachers can see it now, and those who opted in get a WhatsApp.</p></Card>}
@@ -85,7 +86,8 @@ export default async function CoversPage({ searchParams }: { searchParams: Promi
             const everyone = r.wave === "all" || r.urgent || now >= everyoneAt(r);
             const mins = Math.max(0, Math.ceil((everyoneAt(r) - now) / 60000));
             return (
-              <Card key={r.id} tone="urgent">
+              <Card key={r.id} tone={r.urgent || new Date(r.starts_at).getTime() - now < URGENT_HOURS * 3600_000 ? "sos" : "urgent"}>
+                {(r.urgent || new Date(r.starts_at).getTime() - now < URGENT_HOURS * 3600_000) && <Sticker>SOS!</Sticker>}
                 {head(r)}
                 <div className="flex flex-wrap gap-2">
                   {r.urgent && <Pill tone="bad">Urgent</Pill>}

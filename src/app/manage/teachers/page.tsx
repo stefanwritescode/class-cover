@@ -75,7 +75,7 @@ export default async function TeachersPage() {
   const pipeline = (
     <div className="grid grid-cols-4 gap-1.5">
       {PIPELINE.map((p) => (
-        <div key={p.stage} className="rounded-2xl bg-accent-ink/10 px-2 py-2 text-center">
+        <div key={p.stage} className="rounded-2xl bg-white/10 px-2 py-2 text-center">
           <div className="font-display text-2xl font-bold leading-none">{count(p.stage)}</div>
           <div className="mt-1 text-[10px] font-semibold uppercase tracking-wide opacity-80">{p.short}</div>
         </div>

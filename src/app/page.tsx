@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getViewer } from "@/lib/session";
 import { buttonClass } from "@/components/ui";
+import { CitySky, partOfDayNow, Wobs } from "@/components/wobs";
 
 export default async function Home() {
   const { user, profile, managed } = await getViewer();
@@ -14,13 +15,16 @@ export default async function Home() {
 
   return (
     <main className="mx-auto grid min-h-dvh max-w-md content-start gap-8 pb-10">
-      <div className="relative overflow-hidden rounded-b-[2.5rem] bg-accent px-5 pb-10 pt-20 text-accent-ink">
-        <svg aria-hidden viewBox="0 0 200 200" className="pointer-events-none absolute -right-24 -top-6 h-80 w-80 opacity-15">
-          {[30, 50, 70, 90].map((r) => <circle key={r} cx="100" cy="100" r={r} fill="none" stroke="currentColor" strokeWidth="6" />)}
-        </svg>
-        <p className="relative text-xs font-semibold uppercase tracking-widest opacity-80">Stretch Pilates</p>
-        <h1 className="relative mt-3 text-5xl font-bold leading-[0.95]">Class<br />Cover</h1>
-        <p className="relative mt-4 max-w-xs opacity-85">Last-minute cover, filled in minutes.</p>
+      <div className="relative overflow-hidden rounded-b-[2.5rem] bg-night px-5 pb-8 pt-16 text-white">
+        <CitySky part={partOfDayNow()} />
+        <p className="relative text-[11px] font-semibold uppercase tracking-widest text-cyan">Stretch Pilates</p>
+        <div className="relative flex items-end gap-2">
+          <div className="min-w-0 flex-1">
+            <h1 className="mt-3 text-5xl leading-[0.95]">Class<br />Cover</h1>
+            <p className="mt-4 max-w-xs text-white/85">Last-minute cover, filled in minutes.</p>
+          </div>
+          <Wobs mood="cheer" className="h-32 w-32 flex-none" />
+        </div>
       </div>
       <ol className="grid gap-3 px-5">
         {[
