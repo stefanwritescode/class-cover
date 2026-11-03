@@ -1,6 +1,6 @@
 // Class Cover service worker: keeps the app's code and fonts on the phone so it opens fast,
 // and shows a simple offline page. Signed-in pages are never cached (they hold personal data).
-const CACHE = "cc-static-v2";
+const CACHE = "cc-static-v3";
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) => {

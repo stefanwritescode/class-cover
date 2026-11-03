@@ -46,7 +46,7 @@ export function InstallApp() {
   return (
     <div className="flex items-center gap-3 rounded-3xl border border-line bg-surface p-4">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/app-icon/192" alt="" className="h-10 w-10 flex-none rounded-2xl" />
+      <img src="/app-icon/192?v=wobs1" alt="" className="h-10 w-10 flex-none rounded-2xl" />
       <div className="min-w-0 flex-1">
         <p className="font-semibold">Add Wobs to your home screen</p>
         {ios ? (

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Wobs",
   description: "When a class wobbles, Wobs steadies it. Last-minute Pilates cover, filled in minutes.",
   appleWebApp: { capable: true, title: "Wobs", statusBarStyle: "default" },
-  icons: { apple: "/app-icon/apple-180" },
+  icons: { icon: "/app-icon/192?v=wobs1", apple: "/app-icon/apple-180?v=wobs1" },
 };
 
 export const viewport: Viewport = {
