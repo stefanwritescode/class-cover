@@ -1,12 +1,12 @@
 import Link from "next/link";
 
 // DRAFT. Written from what the app actually collects and where it sends data.
-// Items in [square brackets] need filling in, and the whole notice needs review by
-// someone qualified in POPIA before real teachers sign up.
+// Needs review by someone qualified in POPIA before real teachers sign up, including
+// each provider's data processing terms.
 
 export const metadata = { title: "Privacy notice · Class Cover" };
 
-const UPDATED = "2 November 2026";
+const UPDATED = "3 November 2026";
 
 function H({ children }: { children: React.ReactNode }) {
   return <h2 className="mt-4 font-display text-xl font-semibold">{children}</h2>;
@@ -16,7 +16,7 @@ export default function PrivacyPage() {
   return (
     <main className="mx-auto grid max-w-2xl gap-3 px-5 pb-16 pt-8 text-[15px] leading-relaxed">
       <p className="rounded-2xl bg-urgent-soft px-4 py-3 text-sm">
-        <b>Draft for review.</b> This notice hasn&apos;t been checked by a legal adviser yet. Details in [brackets] still need filling in.
+        <b>Draft for review.</b> This notice hasn&apos;t been checked by a legal adviser yet.
       </p>
 
       <p className="text-xs font-semibold uppercase tracking-widest text-muted">Class Cover</p>
@@ -31,8 +31,9 @@ export default function PrivacyPage() {
 
       <H>Who is responsible</H>
       <p>
-        The responsible party is [Stretch Pilates legal entity name, registration number], [physical address]. Our Information
-        Officer is [name], who you can contact at [email address].
+        The responsible party is Lungile Health (Pty) Ltd, registration number 2014/069056/07, 12 Beachway, Durban North, 4051.
+        Our Information Officer is Stefan van der Merwe, who you can contact at{" "}
+        <a href="mailto:stefan@lungilehealth.com" className="font-semibold text-accent">stefan@lungilehealth.com</a>.
       </p>
 
       <H>What we collect</H>
@@ -83,13 +84,13 @@ export default function PrivacyPage() {
       </ul>
       <p>
         Where information is processed outside South Africa, we rely on these providers&apos; contractual data-protection commitments,
-        as POPIA requires for cross-border transfers. [Confirm each provider&apos;s data processing terms.]
+        as POPIA requires for cross-border transfers.
       </p>
 
       <H>How long we keep it</H>
       <p>
         We keep your profile while your account is open. When you delete your account we remove your profile, contact and payment
-        details. Records of covers and payments are kept for [5 years] for tax and accounting purposes. [Confirm retention periods.]
+        details. Records of covers and payments are kept for 5 years for tax and accounting purposes.
       </p>
 
       <H>Keeping it safe</H>
@@ -104,10 +105,11 @@ export default function PrivacyPage() {
         <li>tell you what personal information we hold about you, and give you a copy;</li>
         <li>correct or update it (you can change most of it yourself in your profile);</li>
         <li>delete it, or stop using it;</li>
-        <li>stop sending you WhatsApp alerts (turn them off in your profile, or reply STOP).</li>
+        <li>stop sending you WhatsApp alerts (turn them off in your profile).</li>
       </ul>
       <p>
-        To make a request, email [email address]. If you&apos;re unhappy with how we handle your information, you can complain to the
+        To make a request, email{" "}
+        <a href="mailto:stefan@lungilehealth.com" className="font-semibold text-accent">stefan@lungilehealth.com</a>. If you&apos;re unhappy with how we handle your information, you can complain to the
         Information Regulator: <span className="font-mono text-sm">complaints.IR@inforegulator.org.za</span>,{" "}
         <a href="https://inforegulator.org.za" className="font-semibold text-accent" target="_blank" rel="noreferrer">inforegulator.org.za</a>.
       </p>
