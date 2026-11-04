@@ -2,7 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { ensureSubscriber, manychatConfigured, sendCoverAlert } from "@/lib/manychat";
 import { fmtDay, fmtTime, rand, shortLocation } from "@/lib/format";
 
-const siteUrl = () => (process.env.SITE_URL ?? "https://class-cover-five.vercel.app").replace(/\/$/, "");
+const siteUrl = () => (process.env.SITE_URL ?? "https://heywobs.com").replace(/\/$/, "");
 
 type Target = { teacher_id: string; full_name: string; phone: string; manychat_subscriber_id: string | null; wave_key: string };
 
